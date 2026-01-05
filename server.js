@@ -204,16 +204,33 @@ async function getStandingsForPoule(nasFrame) {
     try {
         const standings = await nasFrame.evaluate(() => {
             const results = [];
-            // Zoek naar standen tabel
-            const rows = Array.from(document.querySelectorAll('table tr'));
+            // Zoek naar standen tabel - probeer verschillende selectors
+            let rows = Array.from(document.querySelectorAll('table tr'));
+            
+            // Als geen rijen gevonden, probeer andere selectors
+            if (rows.length === 0) {
+                rows = Array.from(document.querySelectorAll('tr'));
+            }
             
             rows.forEach((row, index) => {
-                const cells = row.querySelectorAll('td');
+                const cells = row.querySelectorAll('td, th');
                 if (cells.length >= 3) {
                     const position = cells[0]?.textContent.trim();
                     const teamName = cells[1]?.textContent.trim();
-                    const games = cells[2]?.textContent.trim();
-                    const points = cells[cells.length - 1]?.textContent.trim();
+                    // Probeer verschillende kolommen voor games en points
+                    let games = cells[2]?.textContent.trim();
+                    let points = cells[cells.length - 1]?.textContent.trim();
+                    
+                    // Als points niet in laatste kolom, zoek naar kolom met punten
+                    if (!points || isNaN(parseInt(points))) {
+                        for (let i = cells.length - 1; i >= 0; i--) {
+                            const val = cells[i]?.textContent.trim();
+                            if (val && !isNaN(parseInt(val)) && parseInt(val) > 0) {
+                                points = val;
+                                break;
+                            }
+                        }
+                    }
                     
                     if (position && teamName && !isNaN(parseInt(position))) {
                         results.push({
@@ -330,11 +347,11 @@ async function getVDOTeamsForGroup(page, competitionName, groupName) {
             }
         }
         
-        // Selecteer weergave
+        // Selecteer weergave - gebruik "Standen" voor betere scraping
         const viewOptions = await nasFrame.$$eval('select:nth-of-type(3) option', opts =>
             opts.map(o => ({ value: o.value, text: o.textContent.trim() }))
         );
-        const viewOption = viewOptions.find(o => o.text.includes('Programma'));
+        const viewOption = viewOptions.find(o => o.text.includes('Standen'));
         if (viewOption) {
             await nasFrame.select('select:nth-of-type(3)', viewOption.value);
             await page.waitForTimeout(2000);

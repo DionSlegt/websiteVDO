@@ -126,11 +126,35 @@ async function checkForUpdates() {
 }
 
 /**
+ * Handmatige update functie (altijd update, ongeacht laatste update tijd)
+ */
+async function forceUpdateTeams() {
+    console.log('Handmatige teams update gestart...');
+    const newData = await fetchLatestTeamsData();
+    if (newData && newData.teams && Object.keys(newData.teams).length > 0) {
+        updateTeamsData(newData);
+        console.log('Teams succesvol geüpdatet!');
+        return true;
+    } else {
+        console.warn('Geen nieuwe teams data ontvangen of leeg resultaat');
+        return false;
+    }
+}
+
+// Maak functie beschikbaar in globale scope voor handmatige updates
+window.forceUpdateTeams = forceUpdateTeams;
+
+/**
  * Start het automatische update systeem
  */
 function startAutoUpdate() {
-    // Check direct bij laden
-    checkForUpdates();
+    // Check direct bij laden (forceer update voor testen)
+    // Voor productie: gebruik checkForUpdates() in plaats van forceUpdateTeams()
+    forceUpdateTeams().catch(err => {
+        console.error('Fout bij automatische update:', err);
+        // Fallback naar normale check als force update faalt
+        checkForUpdates();
+    });
     
     // Check elke 6 uur op updates
     updateInterval = setInterval(() => {
@@ -174,6 +198,53 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', startAutoUpdate);
 } else {
     startAutoUpdate();
+}
+
+// Event listener voor handmatige update knop
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const updateBtn = document.getElementById('updateTeamsBtn');
+        if (updateBtn) {
+            updateBtn.addEventListener('click', async () => {
+                updateBtn.disabled = true;
+                updateBtn.textContent = 'Bijwerken...';
+                const success = await forceUpdateTeams();
+                updateBtn.disabled = false;
+                if (success) {
+                    updateBtn.textContent = '✓ Bijgewerkt!';
+                    setTimeout(() => {
+                        updateBtn.textContent = updateBtn.getAttribute('data-nl') || 'Teams Bijwerken';
+                    }, 2000);
+                } else {
+                    updateBtn.textContent = '✗ Fout';
+                    setTimeout(() => {
+                        updateBtn.textContent = updateBtn.getAttribute('data-nl') || 'Teams Bijwerken';
+                    }, 2000);
+                }
+            });
+        }
+    });
+} else {
+    const updateBtn = document.getElementById('updateTeamsBtn');
+    if (updateBtn) {
+        updateBtn.addEventListener('click', async () => {
+            updateBtn.disabled = true;
+            updateBtn.textContent = 'Bijwerken...';
+            const success = await forceUpdateTeams();
+            updateBtn.disabled = false;
+            if (success) {
+                updateBtn.textContent = '✓ Bijgewerkt!';
+                setTimeout(() => {
+                    updateBtn.textContent = updateBtn.getAttribute('data-nl') || 'Teams Bijwerken';
+                }, 2000);
+            } else {
+                updateBtn.textContent = '✗ Fout';
+                setTimeout(() => {
+                    updateBtn.textContent = updateBtn.getAttribute('data-nl') || 'Teams Bijwerken';
+                }, 2000);
+            }
+        });
+    }
 }
 
 // Team Standings Data
