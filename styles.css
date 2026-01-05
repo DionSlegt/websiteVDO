@@ -73,7 +73,13 @@
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
     --border-color: rgba(255, 255, 255, 0.1);
-    --nav-h: 84px; /* navbar hoogte */
+    --nav-h: 84px; /* navbar hoogte desktop */
+}
+
+@media (max-width: 768px) {
+    :root {
+        --nav-h: 60px; /* navbar hoogte mobiel */
+    }
 }
 
 /* --- Typography reset (fix grote gaps tussen koppen) --- */
@@ -1149,6 +1155,120 @@ footer {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* Navbar aanpassingen */
+    .navbar {
+        padding: 1rem 0;
+    }
+    
+    .navbar .container {
+        padding: 0 15px;
+    }
+    
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    .hamburger {
+        display: flex;
+        z-index: 1001;
+    }
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 60px;
+        flex-direction: column;
+        background: var(--bg-section);
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: var(--shadow);
+        padding: 2rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+    
+    .nav-menu li {
+        width: 100%;
+    }
+    
+    .nav-menu a {
+        display: block;
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .language-toggle {
+        right: 50px;
+    }
+    
+    /* Hero section */
+    .hero {
+        height: auto;
+        min-height: calc(100vh - 60px);
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .hero-left {
+        order: 2;
+    }
+    
+    .hero-right {
+        order: 1;
+    }
+    
+    .hero-media {
+        max-width: 100%;
+        margin: 0 auto;
+        aspect-ratio: 9 / 16;
+    }
+    
+    .hero-video,
+    .hero-gif {
+        object-fit: contain;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+    
+    /* Scroll video */
+    .scroll-video__sticky {
+        top: 60px;
+        height: calc(100vh - 60px);
+    }
+    
+    .scroll-video__video {
+        width: 100vw;
+        max-height: 70vh;
+        padding: 10px;
+    }
+    
+    /* Location section */
     .location h2 {
         font-size: 2.5rem;
     }
@@ -1161,6 +1281,7 @@ footer {
         font-size: 1.5rem;
     }
     
+    /* Sponsors section */
     .sponsors h2 {
         font-size: 2.5rem;
         margin-bottom: 3rem;
@@ -1179,70 +1300,24 @@ footer {
     .sponsor-item img {
         max-height: 100px;
     }
-    
-    .hamburger {
-        display: flex;
-    }
 
-    .nav-menu {
-        position: fixed;
-        left: -100%;
-        top: 70px;
-        flex-direction: column;
-        background: var(--bg-section);
-        width: 100%;
-        text-align: center;
-        transition: 0.3s;
-        box-shadow: var(--shadow);
-        padding: 2rem 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .nav-menu.active {
-        left: 0;
-    }
-
-    .hero-content {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-        text-align: center;
-    }
-    
-    .hero-left {
-        order: 2;
-    }
-    
-    .hero-right {
-        order: 1;
-    }
-    
-    .hero-media {
-        max-width: 400px;
-        margin: 0 auto;
-    }
-
-    .hero-title {
-        font-size: 3rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1.5rem;
-    }
-    
-    .hero-description {
-        font-size: 1rem;
-    }
-
+    /* Contact section */
     .contact-content {
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
+    /* Services section */
     .services-grid {
         grid-template-columns: 1fr;
     }
+    
+    .service-card {
+        padding: 2rem 1.5rem;
+    }
 
+    /* Board members */
     .board-member-large {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -1279,21 +1354,172 @@ footer {
     .member-name-large {
         font-size: 2rem;
     }
+    
+    /* General improvements */
+    section {
+        padding: 30px 15px;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    /* Verbeter touch targets */
+    .cta-button,
+    .language-switch {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Betere spacing voor tekst */
+    .about-content p {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+}
+
+/* Mobile optimizations for scroll-video */
+@media (max-width: 768px) {
+    .scroll-video__sticky {
+        top: 60px; /* Kleinere navbar op mobiel */
+        height: calc(100vh - 60px);
+    }
+    
+    .scroll-video__video {
+        width: 100vw;
+        max-height: 70vh;
+        padding: 10px;
+    }
+    
+    .hero {
+        height: auto;
+        min-height: calc(100vh - 60px);
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+    
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .hero-media {
+        max-width: 100%;
+        aspect-ratio: 9 / 16; /* Portret op mobiel */
+    }
+    
+    .hero-video,
+    .hero-gif {
+        object-fit: contain;
+    }
+    
+    section {
+        padding: 30px 15px;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    /* Verbeter touch targets */
+    .nav-menu a,
+    .cta-button,
+    .language-switch {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Betere spacing voor tekst */
+    .about-content p,
+    .hero-description {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
 }
 
 @media (max-width: 480px) {
     .hero-title {
         font-size: 2rem;
+        line-height: 1.2;
     }
 
     .hero-subtitle {
         font-size: 1rem;
     }
+    
+    .hero-description {
+        font-size: 0.95rem;
+    }
 
     .about h2,
     .services h2,
-    .contact h2 {
+    .contact h2,
+    .sponsors h2,
+    .location h2 {
         font-size: 2rem;
+    }
+    
+    .scroll-video__sticky {
+        top: 50px;
+        height: calc(100vh - 50px);
+    }
+    
+    .scroll-video__video {
+        max-height: 60vh;
+    }
+    
+    .navbar {
+        padding: 0.75rem 1rem;
+    }
+    
+    .logo h1 {
+        font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+        top: 50px;
+        padding: 1.5rem 0;
+    }
+    
+    .nav-menu a {
+        font-size: 1rem;
+        padding: 0.75rem 0;
+    }
+    
+    .cta-button {
+        padding: 0.875rem 2rem;
+        font-size: 0.95rem;
+    }
+    
+    .service-card {
+        padding: 1.5rem 1.25rem;
+    }
+    
+    .location-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .location-address {
+        font-size: 1.5rem;
+    }
+    
+    .sponsors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+    
+    .sponsor-item {
+        padding: 1rem;
+        min-height: 100px;
+    }
+    
+    .sponsor-item img {
+        max-height: 80px;
     }
 
     .footer-content {
