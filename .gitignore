@@ -1,38 +1,18 @@
-# OS Files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Adobe / design
+*.aep
+*.psd
+*.ai
+*.c4d
+Adobe After Effects Auto-Save/
+*.aep Logs/
 
-# Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Video / exports
+*.mp4
+*.mov
+*.webm
 
-# Logs
-*.log
-npm-debug.log*
-
-# Temporary files
-*.tmp
-*.temp
-
-# Node modules (als je die later toevoegt)
+# Node
 node_modules/
 
-# Environment files
-.env
-.env.local
-
-node_modules
+# OS / misc
 .DS_Store
-node_modules
-.DS_Store
-*.mov
-*.mp4
-Export/
