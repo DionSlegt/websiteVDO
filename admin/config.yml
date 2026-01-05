@@ -1,0 +1,72 @@
+backend:
+  name: git-gateway
+  branch: main
+  # Voor lokale ontwikkeling zonder GitHub, gebruik test-repo backend:
+  # name: test-repo
+
+# Uncomment below to enable drafts
+# publish_mode: editorial_workflow
+
+media_folder: "images" # Media files will be stored in the repo under images
+public_folder: "/images" # The src attribute for uploaded media will begin with /images
+
+collections:
+  - name: "pages" # Used in routes, e.g., /admin/collections/pages
+    label: "Pagina's" # Used in the UI
+    folder: "_data/pages" # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    slug: "{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
+    fields: # The fields for each document, usually in front matter
+      - {label: "Titel", name: "title", widget: "string"}
+      - {label: "Permalink", name: "permalink", widget: "string", required: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "bestuur" # Used in routes, e.g., /admin/collections/bestuur
+    label: "Bestuursleden" # Used in the UI
+    folder: "_data/bestuur" # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    slug: "{{slug}}" # Filename template
+    fields: # The fields for each document
+      - {label: "Naam", name: "name", widget: "string"}
+      - {label: "Functie", name: "role", widget: "string"}
+      - {label: "Beschrijving", name: "description", widget: "text"}
+      - {label: "Foto", name: "photo", widget: "image", required: false}
+      - {label: "Volgorde", name: "order", widget: "number", default: 0}
+
+  - name: "content" # Used in routes, e.g., /admin/collections/content
+    label: "Website Content" # Used in the UI
+    files:
+      - label: "Home Pagina"
+        name: "home"
+        file: "_data/home.json"
+        fields:
+          - {label: "Hero Titel", name: "heroTitle", widget: "string"}
+          - {label: "Over VDO Tekst", name: "aboutText", widget: "markdown"}
+          - {label: "Inschrijven Tekst", name: "inschrijvenText", widget: "markdown"}
+
+      - label: "Over Ons"
+        name: "over"
+        file: "_data/over.json"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Inhoud", name: "content", widget: "markdown"}
+
+      - label: "De Meppers"
+        name: "meppers"
+        file: "_data/meppers.json"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Inhoud", name: "content", widget: "markdown"}
+
+      - label: "Contact Informatie"
+        name: "contact"
+        file: "_data/contact.json"
+        fields:
+          - {label: "Email", name: "email", widget: "string"}
+          - {label: "Telefoon", name: "phone", widget: "string"}
+          - {label: "Adres", name: "address", widget: "object", fields: [
+              {label: "Straat", name: "street", widget: "string"},
+              {label: "Wijk", name: "district", widget: "string"},
+              {label: "Plaats", name: "city", widget: "string"}
+            ]}
+

@@ -1,0 +1,38 @@
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (als je die later toevoegt)
+node_modules/
+
+# Environment files
+.env
+.env.local
+
+node_modules
+.DS_Store
+node_modules
+.DS_Store
+*.mov
+*.mp4
+Export/

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Editor - VDO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #141414;
+            color: #f3f4f6;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #5a7a9a;
+            margin-bottom: 2rem;
+        }
+        .warning {
+            background: #282828;
+            border-left: 4px solid #5a7a9a;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+        .section {
+            background: #282828;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+        .section h2 {
+            color: #5a7a9a;
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #141414;
+            border: 1px solid #3a3a3a;
+            border-radius: 4px;
+            color: #f3f4f6;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        button {
+            background: #5a7a9a;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background: #6b8ba3;
+        }
+        .success {
+            background: #2d5016;
+            color: #a3d977;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+        }
+        .success.show {
+            display: block;
+        }
+        .info {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Content Editor - VDO</h1>
+        
+        <div class="warning">
+            <strong>✅ Backend Server:</strong> Start de server met <code>npm install && npm start</code> in de terminal.
+            <br><br>
+            <strong>Hoe werkt het:</strong> Bewerk de content hieronder en klik op "Opslaan". De wijzigingen worden automatisch opgeslagen!
+            <br>
+            <strong>Belangrijk:</strong> Ververs de website pagina om de wijzigingen te zien!
+        </div>
+
+        <!-- Home Content -->
+        <div class="section">
+            <h2>Home Pagina</h2>
+            <label for="heroTitle">Hero Titel:</label>
+            <input type="text" id="heroTitle" placeholder="Welkom bij VDO">
+            
+            <label for="aboutText" style="margin-top: 1rem;">Over VDO Tekst:</label>
+            <textarea id="aboutText" placeholder="VDO is een tafeltennisvereniging..."></textarea>
+            <div class="info">Gebruik lege regels tussen paragrafen</div>
+            
+            <label for="inschrijvenText" style="margin-top: 1rem;">Inschrijven Tekst:</label>
+            <textarea id="inschrijvenText" placeholder="Wil je lid worden..."></textarea>
+            
+            <button onclick="saveHome()">Opslaan Home Content</button>
+            <div class="success" id="homeSuccess">✅ Opgeslagen! Ververs de homepage om te zien.</div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="section">
+            <h2>Contact Informatie</h2>
+            <label for="email">Email:</label>
+            <input type="text" id="email" placeholder="rvos1987@gmail.com">
+            
+            <label for="phone" style="margin-top: 1rem;">Telefoon:</label>
+            <input type="text" id="phone" placeholder="06 43121990">
+            
+            <label for="street" style="margin-top: 1rem;">Straat:</label>
+            <input type="text" id="street" placeholder="Eendracht 4">
+            
+            <label for="district" style="margin-top: 1rem;">Wijk:</label>
+            <input type="text" id="district" placeholder="Meerwijk-Oost">
+            
+            <label for="city" style="margin-top: 1rem;">Plaats:</label>
+            <input type="text" id="city" placeholder="Uithoorn">
+            
+            <button onclick="saveContact()">Opslaan Contact</button>
+            <div class="success" id="contactSuccess">✅ Opgeslagen! Ververs de pagina om te zien.</div>
+        </div>
+
+        <!-- Over Content -->
+        <div class="section">
+            <h2>Over Ons Pagina</h2>
+            <label for="overTitle">Titel:</label>
+            <input type="text" id="overTitle" placeholder="Over VDO">
+            
+            <label for="overContent" style="margin-top: 1rem;">Inhoud:</label>
+            <textarea id="overContent" placeholder="Hier komt informatie..."></textarea>
+            
+            <button onclick="saveOver()">Opslaan Over Ons</button>
+            <div class="success" id="overSuccess">✅ Opgeslagen! Ververs de Over Ons pagina om te zien.</div>
+        </div>
+
+        <!-- Meppers Content -->
+        <div class="section">
+            <h2>De Meppers Pagina</h2>
+            <label for="meppersTitle">Titel:</label>
+            <input type="text" id="meppersTitle" placeholder="De Meppers">
+            
+            <label for="meppersContent" style="margin-top: 1rem;">Inhoud:</label>
+            <textarea id="meppersContent" placeholder="Hier komt informatie..."></textarea>
+            
+            <button onclick="saveMeppers()">Opslaan De Meppers</button>
+            <div class="success" id="meppersSuccess">✅ Opgeslagen! Ververs de De Meppers pagina om te zien.</div>
+        </div>
+    </div>
+
+    <script>
+        // API base URL - use backend server
+        const API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
+        
+        // Check if backend is available
+        async function checkBackend() {
+            try {
+                const response = await fetch(`${API_BASE}/api/health`);
+                if (response.ok) {
+                    console.log('✅ Backend server is running');
+                    return true;
+                }
+            } catch (e) {
+                console.warn('⚠️ Backend server not found. Make sure to run: npm start');
+                return false;
+            }
+        }
+        
+        // Load existing content
+        async function loadContent() {
+            try {
+                const home = await fetch(`${API_BASE}/api/content/home`).then(r => r.json()).catch(() => 
+                    fetch('_data/home.json').then(r => r.json())
+                );
+                document.getElementById('heroTitle').value = home.heroTitle || '';
+                document.getElementById('aboutText').value = home.aboutText || '';
+                document.getElementById('inschrijvenText').value = home.inschrijvenText || '';
+            } catch (e) {
+                console.error('Error loading home:', e);
+            }
+
+            try {
+                const contact = await fetch(`${API_BASE}/api/content/contact`).then(r => r.json()).catch(() => 
+                    fetch('_data/contact.json').then(r => r.json())
+                );
+                document.getElementById('email').value = contact.email || '';
+                document.getElementById('phone').value = contact.phone || '';
+                document.getElementById('street').value = contact.address?.street || '';
+                document.getElementById('district').value = contact.address?.district || '';
+                document.getElementById('city').value = contact.address?.city || '';
+            } catch (e) {
+                console.error('Error loading contact:', e);
+            }
+
+            try {
+                const over = await fetch(`${API_BASE}/api/content/over`).then(r => r.json()).catch(() => 
+                    fetch('_data/over.json').then(r => r.json())
+                );
+                document.getElementById('overTitle').value = over.title || '';
+                document.getElementById('overContent').value = over.content || '';
+            } catch (e) {
+                console.error('Error loading over:', e);
+            }
+
+            try {
+                const meppers = await fetch(`${API_BASE}/api/content/meppers`).then(r => r.json()).catch(() => 
+                    fetch('_data/meppers.json').then(r => r.json())
+                );
+                document.getElementById('meppersTitle').value = meppers.title || '';
+                document.getElementById('meppersContent').value = meppers.content || '';
+            } catch (e) {
+                console.error('Error loading meppers:', e);
+            }
+        }
+
+        // Save functions using API
+        async function saveHome() {
+            const data = {
+                heroTitle: document.getElementById('heroTitle').value,
+                aboutText: document.getElementById('aboutText').value,
+                inschrijvenText: document.getElementById('inschrijvenText').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/content/home`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('homeSuccess').classList.add('show');
+                    setTimeout(() => document.getElementById('homeSuccess').classList.remove('show'), 3000);
+                } else {
+                    throw new Error('Failed to save');
+                }
+            } catch (e) {
+                alert('⚠️ Backend server niet gevonden!\n\nStart de server met: npm install && npm start\n\nOf kopieer de JSON:\n\n' + JSON.stringify(data, null, 2));
+            }
+        }
+
+        async function saveContact() {
+            const data = {
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: {
+                    street: document.getElementById('street').value,
+                    district: document.getElementById('district').value,
+                    city: document.getElementById('city').value
+                }
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/content/contact`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('contactSuccess').classList.add('show');
+                    setTimeout(() => document.getElementById('contactSuccess').classList.remove('show'), 3000);
+                } else {
+                    throw new Error('Failed to save');
+                }
+            } catch (e) {
+                alert('⚠️ Backend server niet gevonden!\n\nStart de server met: npm install && npm start\n\nOf kopieer de JSON:\n\n' + JSON.stringify(data, null, 2));
+            }
+        }
+
+        async function saveOver() {
+            const data = {
+                title: document.getElementById('overTitle').value,
+                content: document.getElementById('overContent').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/content/over`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('overSuccess').classList.add('show');
+                    setTimeout(() => document.getElementById('overSuccess').classList.remove('show'), 3000);
+                } else {
+                    throw new Error('Failed to save');
+                }
+            } catch (e) {
+                alert('⚠️ Backend server niet gevonden!\n\nStart de server met: npm install && npm start\n\nOf kopieer de JSON:\n\n' + JSON.stringify(data, null, 2));
+            }
+        }
+
+        async function saveMeppers() {
+            const data = {
+                title: document.getElementById('meppersTitle').value,
+                content: document.getElementById('meppersContent').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/content/meppers`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('meppersSuccess').classList.add('show');
+                    setTimeout(() => document.getElementById('meppersSuccess').classList.remove('show'), 3000);
+                } else {
+                    throw new Error('Failed to save');
+                }
+            } catch (e) {
+                alert('⚠️ Backend server niet gevonden!\n\nStart de server met: npm install && npm start\n\nOf kopieer de JSON:\n\n' + JSON.stringify(data, null, 2));
+            }
+        }
+
+        // Load content on page load
+        checkBackend().then(() => {
+            loadContent();
+        });
+    </script>
+</body>
+</html>
+

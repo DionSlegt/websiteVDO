@@ -1,0 +1,48 @@
+# Lokale configuratie voor ontwikkeling
+# Gebruik deze configuratie alleen voor lokale testen
+# Voor productie, gebruik config.yml met git-gateway
+
+backend:
+  name: test-repo
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "content"
+    label: "Website Content"
+    files:
+      - label: "Home Pagina"
+        name: "home"
+        file: "_data/home.json"
+        fields:
+          - {label: "Hero Titel", name: "heroTitle", widget: "string"}
+          - {label: "Over VDO Tekst", name: "aboutText", widget: "markdown"}
+          - {label: "Inschrijven Tekst", name: "inschrijvenText", widget: "markdown"}
+
+      - label: "Over Ons"
+        name: "over"
+        file: "_data/over.json"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Inhoud", name: "content", widget: "markdown"}
+
+      - label: "De Meppers"
+        name: "meppers"
+        file: "_data/meppers.json"
+        fields:
+          - {label: "Titel", name: "title", widget: "string"}
+          - {label: "Inhoud", name: "content", widget: "markdown"}
+
+      - label: "Contact Informatie"
+        name: "contact"
+        file: "_data/contact.json"
+        fields:
+          - {label: "Email", name: "email", widget: "string"}
+          - {label: "Telefoon", name: "phone", widget: "string"}
+          - {label: "Adres", name: "address", widget: "object", fields: [
+              {label: "Straat", name: "street", widget: "string"},
+              {label: "Wijk", name: "district", widget: "string"},
+              {label: "Plaats", name: "city", widget: "string"}
+            ]}
+
