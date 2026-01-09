@@ -432,8 +432,9 @@ header {
     position: relative;
     z-index: 0;
     will-change: transform;
-    margin: 0;
-    padding: 0;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .hero-left {
