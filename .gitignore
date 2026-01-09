@@ -10,6 +10,8 @@ Adobe After Effects Auto-Save/
 *.mp4
 *.mov
 *.webm
+# Uitzondering voor hero video
+!artwork/ALL_converted_final.webm
 
 # Node
 node_modules/
