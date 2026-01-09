@@ -435,6 +435,7 @@ header {
     margin: 0 auto;
     padding: 0 20px;
     box-sizing: border-box;
+    overflow: visible;
 }
 
 .hero-left {
@@ -450,6 +451,8 @@ header {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    overflow: visible;
+    max-width: 100%;
 }
 
 .hero-media {
@@ -466,6 +469,7 @@ header {
     position: relative;
     will-change: transform;
     transform: translateZ(0);
+    flex-shrink: 0;
 }
 
 .hero-video,
