@@ -1,52 +1,11 @@
-// Functie om standen op te halen van de NTTB site
-// Let op: Dit werkt mogelijk niet vanwege CORS-beperkingen
-// Als alternatief kan de data handmatig worden bijgewerkt in de teamStandings object hieronder
-async function fetchStandingsFromNTTB(teamClass, poule) {
-    try {
-        // De NAS competitie pagina URL
-        const nasUrl = 'https://holland-noord.nttb.nl/competities/regiocompetitie-in-nas/';
-        
-        // Probeer de data op te halen via een CORS proxy (dit is een tijdelijke oplossing)
-        // In productie zou je een eigen backend/proxy moeten gebruiken
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(nasUrl)}`;
-        
-        const response = await fetch(proxyUrl);
-        const data = await response.json();
-        
-        // Parse de HTML om de standen te extraheren
-        // Dit is complex omdat de data in een iframe staat
-        // Voor nu retourneren we null en gebruiken we de fallback data
-        
-        return null; // Data parsing niet geïmplementeerd vanwege complexiteit
-    } catch (error) {
-        console.error('Fout bij ophalen standen:', error);
-        return null;
-    }
-}
 
-// Helper functie om invallers te filteren uit teamleden
-function filterInvallers(members) {
-    if (!members) return [];
-    return members.filter(member => !member.toLowerCase().includes('invaller'));
-}
+const TEAMS_API_BASE = window.location.port === '3000' ? '/api' : (window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api');
 
-// Automatisch update systeem voor teams en standen
-// Dit systeem checkt periodiek de laatste competitie en werkt teams/standen bij
-
-// API base URL - gebruik backend server als beschikbaar
-const API_BASE = window.location.port === '3000' ? '/api' : (window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api');
-
-// Laatste update timestamp
 let lastUpdateTime = localStorage.getItem('teamsLastUpdate');
 let updateInterval = null;
-
-/**
- * Vraag de backend aan om alle VDO teams en standen op te halen voor de laatste competitie
- * @returns {Promise<Object>} Object met alle teams data
- */
 async function fetchLatestTeamsData() {
     try {
-        const response = await fetch(`${API_BASE}/teams/update`, {
+        const response = await fetch(`${TEAMS_API_BASE}/teams/update`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -66,25 +25,17 @@ async function fetchLatestTeamsData() {
     }
 }
 
-/**
- * Update de teams data in de applicatie
- * @param {Object} newData - Nieuwe teams data van de backend
- */
 function updateTeamsData(newData) {
     if (!newData || !newData.teams) {
         console.log('Geen nieuwe data om bij te werken');
         return;
     }
     
-    // Update teamStandings object
     Object.keys(newData.teams).forEach(teamName => {
         teamStandings[teamName] = newData.teams[teamName];
     });
     
-    // Update HTML met nieuwe teams
     updateTeamsHTML(newData.teams);
-    
-    // Sla update tijd op
     lastUpdateTime = new Date().toISOString();
     localStorage.setItem('teamsLastUpdate', lastUpdateTime);
     localStorage.setItem('teamsData', JSON.stringify(newData.teams));
@@ -92,27 +43,16 @@ function updateTeamsData(newData) {
     console.log('Teams data bijgewerkt:', new Date().toLocaleString('nl-NL'));
 }
 
-/**
- * Update de HTML met nieuwe teams
- * @param {Object} teams - Teams data object
- */
 function updateTeamsHTML(teams) {
-    // Dit wordt aangeroepen wanneer teams worden toegevoegd of verwijderd
-    // Voor nu loggen we alleen, in de toekomst kunnen we de DOM dynamisch updaten
     console.log('Teams HTML zou moeten worden bijgewerkt met:', Object.keys(teams));
 }
 
-/**
- * Check of er een update nodig is (elke 24 uur)
- */
 async function checkForUpdates() {
     const now = new Date();
     const lastUpdate = lastUpdateTime ? new Date(lastUpdateTime) : null;
-    
-    // Check of er 24 uur zijn verstreken sinds laatste update
     const hoursSinceUpdate = lastUpdate 
         ? (now - lastUpdate) / (1000 * 60 * 60)
-        : 24; // Als geen laatste update, update nu
+        : 24;
     
     if (hoursSinceUpdate >= 24) {
         console.log('Controleren op updates...');
@@ -125,9 +65,6 @@ async function checkForUpdates() {
     }
 }
 
-/**
- * Handmatige update functie (altijd update, ongeacht laatste update tijd)
- */
 async function forceUpdateTeams() {
     console.log('Handmatige teams update gestart...');
     const newData = await fetchLatestTeamsData();
@@ -141,32 +78,20 @@ async function forceUpdateTeams() {
     }
 }
 
-// Maak functie beschikbaar in globale scope voor handmatige updates
-window.forceUpdateTeams = forceUpdateTeams;
 
-/**
- * Start het automatische update systeem
- */
 function startAutoUpdate() {
-    // Check direct bij laden (forceer update voor testen)
-    // Voor productie: gebruik checkForUpdates() in plaats van forceUpdateTeams()
     forceUpdateTeams().catch(err => {
         console.error('Fout bij automatische update:', err);
-        // Fallback naar normale check als force update faalt
-        checkForUpdates();
+    checkForUpdates();
     });
     
-    // Check elke 6 uur op updates
     updateInterval = setInterval(() => {
         checkForUpdates();
-    }, 6 * 60 * 60 * 1000); // 6 uur in milliseconden
+    }, 6 * 60 * 60 * 1000);
     
     console.log('Automatisch update systeem gestart');
 }
 
-/**
- * Stop het automatische update systeem
- */
 function stopAutoUpdate() {
     if (updateInterval) {
         clearInterval(updateInterval);
@@ -175,13 +100,11 @@ function stopAutoUpdate() {
     }
 }
 
-// Laad opgeslagen data bij start
 if (lastUpdateTime) {
     const savedData = localStorage.getItem('teamsData');
     if (savedData) {
         try {
             const parsedData = JSON.parse(savedData);
-            // Merge met bestaande data (niet overschrijven)
             Object.keys(parsedData).forEach(teamName => {
                 if (!teamStandings[teamName]) {
                     teamStandings[teamName] = parsedData[teamName];
@@ -192,172 +115,146 @@ if (lastUpdateTime) {
         }
     }
 }
-
-// Start automatische updates wanneer de pagina laadt
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', startAutoUpdate);
 } else {
     startAutoUpdate();
 }
 
-// Event listener voor handmatige update knop
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        const updateBtn = document.getElementById('updateTeamsBtn');
-        if (updateBtn) {
-            updateBtn.addEventListener('click', async () => {
-                updateBtn.disabled = true;
-                updateBtn.textContent = 'Bijwerken...';
-                const success = await forceUpdateTeams();
-                updateBtn.disabled = false;
-                if (success) {
-                    updateBtn.textContent = '✓ Bijgewerkt!';
-                    setTimeout(() => {
-                        updateBtn.textContent = updateBtn.getAttribute('data-nl') || 'Teams Bijwerken';
-                    }, 2000);
-                } else {
-                    updateBtn.textContent = '✗ Fout';
-                    setTimeout(() => {
-                        updateBtn.textContent = updateBtn.getAttribute('data-nl') || 'Teams Bijwerken';
-                    }, 2000);
-                }
-            });
-        }
-    });
-} else {
-    const updateBtn = document.getElementById('updateTeamsBtn');
-    if (updateBtn) {
-        updateBtn.addEventListener('click', async () => {
-            updateBtn.disabled = true;
-            updateBtn.textContent = 'Bijwerken...';
-            const success = await forceUpdateTeams();
-            updateBtn.disabled = false;
-            if (success) {
-                updateBtn.textContent = '✓ Bijgewerkt!';
-                setTimeout(() => {
-                    updateBtn.textContent = updateBtn.getAttribute('data-nl') || 'Teams Bijwerken';
-                }, 2000);
-            } else {
-                updateBtn.textContent = '✗ Fout';
-                setTimeout(() => {
-                    updateBtn.textContent = updateBtn.getAttribute('data-nl') || 'Teams Bijwerken';
-                }, 2000);
-            }
-        });
-    }
-}
-
-// Team Standings Data
-// Bijgewerkt op basis van Najaarscompetitie 2025 - Holland-Noord - Senioren
-// Bron: https://tafeltennis.nl/landelijke-competitie-via-nas/
 const teamStandings = {
     'VDO 1': {
         class: 'Overgangsklasse',
         poule: 'A',
         members: [
-            'P.H.L. Bakker (Paul)',
             'D. Slegt (Dion)',
+            'P.H.L. Bakker (Paul)',
             'M. van Dijk (Martijn)',
             'L. Hoogland (Lars)'
         ],
         standings: [
-            { position: 1, team: 'HBC 1', games: 8, wins: 5, draws: 2, losses: 1, points: 58 },
-            { position: 2, team: "Amsterdam '78 4", games: 8, wins: 4, draws: 1, losses: 2, points: 46 },
-            { position: 3, team: 'VDO 1', games: 8, wins: 2, draws: 1, losses: 4, points: 36 },
-            { position: 4, team: 'Spaarne 1', games: 8, wins: 1, draws: 4, losses: 2, points: 35 },
-            { position: 5, team: 'HTC 2', games: 8, wins: 1, draws: 1, losses: 5, points: 25 }
+            { position: 1, team: 'De Victors 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 2, team: 'DOV 2', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 3, team: 'Amsterdam \'78 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 4, team: 'Amsterdam \'78 5', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 5, team: 'VDO 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 6, team: 'Olympia (E) 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 7, team: 'Victory \'55 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 }
         ]
     },
     'VDO 2': {
-        class: '1e klasse',
+        class: '2e klasse',
         poule: 'D',
         members: [
             'R. Vos (Richard)',
             'D. Demaret (Daniël)',
-            'H. Sanlitürk (Hakan)',
-            'P.R. Peters (Per)'
+            'P.R. Peters (Per)',
+            'H. Sanlitürk (Hakan)'
         ],
         standings: [
-            { position: 1, team: 'Tempo-Team 8', games: 10, wins: 7, draws: 0, losses: 2, points: 70 },
-            { position: 2, team: 'US 3', games: 10, wins: 5, draws: 1, losses: 3, points: 53 },
-            { position: 3, team: "Amsterdam '78 8", games: 10, wins: 5, draws: 0, losses: 4, points: 50 },
-            { position: 4, team: 'Esopus 1', games: 10, wins: 4, draws: 1, losses: 4, points: 48 },
-            { position: 5, team: 'Noordkop 1', games: 10, wins: 3, draws: 1, losses: 5, points: 46 },
-            { position: 6, team: 'VDO 2', games: 10, wins: 2, draws: 1, losses: 7, points: 33 }
+            { position: 1, team: 'US 4', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 2, team: 'Amsterdam \'78 9', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 3, team: 'Oranje Zwart 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 4, team: 'VDO 2', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 5, team: 'JOVO 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 6, team: 'HBC 2', games: 0, wins: 0, draws: 0, losses: 0, points: 0 }
         ]
     },
     'VDO 3': {
-        class: '3e klasse',
-        poule: 'G',
+        class: '2e klasse',
+        poule: 'F',
         members: [
-            'S.T. Visser (Sjoerd)',
             'J.M. Filius (Joscha)',
+            'S.T. Visser (Sjoerd)',
+            'M. van der Wal (Marco)',
             'S. van der Wal (Stefan)',
             'L. Hu (Leo)'
         ],
         standings: [
-            { position: 1, team: 'VDO 3', games: 10, wins: 7, draws: 1, losses: 2, points: 66 },
-            { position: 2, team: 'TTV SDO 3', games: 10, wins: 5, draws: 1, losses: 4, points: 59 },
-            { position: 3, team: 'TSO 2', games: 10, wins: 5, draws: 2, losses: 3, points: 56 },
-            { position: 4, team: 'Holendrecht 1', games: 10, wins: 3, draws: 3, losses: 4, points: 48 },
-            { position: 5, team: "Amsterdam '78 14", games: 10, wins: 4, draws: 0, losses: 6, points: 47 },
-            { position: 6, team: 'Tempo-Team 15', games: 10, wins: 1, draws: 0, losses: 9, points: 24 }
+            { position: 1, team: 'Amstelveen 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 2, team: 'Tempo-Team 9', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 3, team: 'HTC 4', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 4, team: 'ZTTC 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 5, team: 'Amsterdam \'78 10', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 6, team: 'VDO 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 }
         ]
     },
     'VDO 4': {
         class: '3e klasse',
-        poule: 'D',
+        poule: 'F',
         members: [
             'R.A. van der Jagt (René)',
-            'A.J. Kas (Astrid)',
+            'R.E. Wouters (Rob)',
             'M.F. van Rossum (Maarten)',
-            'R.E. Wouters (Rob)'
+            'R.R. Tessensohn (Raymond)',
+            'R.M. de Boer (Richard)'
         ],
         standings: [
-            { position: 1, team: 'Amstelveen 3', games: 8, wins: 6, draws: 0, losses: 2, points: 57 },
-            { position: 2, team: 'HTC 6', games: 8, wins: 5, draws: 1, losses: 2, points: 55 },
-            { position: 3, team: 'VDO 4', games: 8, wins: 3, draws: 1, losses: 4, points: 41 },
-            { position: 4, team: 'TTAZ 2', games: 8, wins: 3, draws: 0, losses: 5, points: 28 },
-            { position: 5, team: 'ZTTC 5', games: 8, wins: 1, draws: 0, losses: 7, points: 19 }
+            { position: 1, team: 'Het Nootwheer 4', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 2, team: 'Tempo-Team 12', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 3, team: 'Rapidity 6', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 4, team: 'Amsterdam \'78 11', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 5, team: 'Holendrecht 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 6, team: 'VDO 4', games: 0, wins: 0, draws: 0, losses: 0, points: 0 }
         ]
     },
     'VDO 5': {
-        class: '4e klasse',
-        poule: 'G',
+        class: '3e klasse',
+        poule: 'D',
         members: [
+            'A.J. Kas (Astrid)',
             'T. Valkenburg (Teun)',
-            'J. Flach (Joost)',
             'R.R. Allard (Ragnar)',
-            'J.J.M. van der Wal (Jan)'
+            'J.J.M. van der Wal (Jan)',
+            'J. Flach (Joost)',
+            'K. Buis (Kevin)'
         ],
         standings: [
-            { position: 1, team: 'VDO 5', games: 10, wins: 9, draws: 0, losses: 1, points: 78 },
-            { position: 2, team: 'Tempo-Team 19', games: 10, wins: 8, draws: 0, losses: 2, points: 74 },
-            { position: 3, team: 'Diemen 1', games: 10, wins: 5, draws: 0, losses: 5, points: 51 },
-            { position: 4, team: 'ZTTC 7', games: 10, wins: 4, draws: 1, losses: 5, points: 43 },
-            { position: 5, team: 'JOVO 6', games: 10, wins: 2, draws: 0, losses: 8, points: 31 },
-            { position: 6, team: 'Spaarne 2', games: 10, wins: 1, draws: 0, losses: 9, points: 23 }
+            { position: 1, team: 'Sassem 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 2, team: 'GSV Heemstede 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 3, team: 'HTC 7', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 4, team: 'Amsterdam \'78 14', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 5, team: 'VDO 5', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 6, team: 'HBC 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 }
+        ]
+    },
+    'VDO 6': {
+        class: '5e klasse',
+        poule: 'C',
+        members: [
+            'C.M. Heine (Collin)',
+            'F. Groenevelt (Frederiek)',
+            'M. Over (Marije)',
+            'S. Demaret (Sebastiaan)',
+            'R. van der Wal (Ria)'
+        ],
+        standings: [
+            { position: 1, team: 'TSO 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 2, team: 'Diemen 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 3, team: 'Tempo-Team 22', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 4, team: 'VDO 6', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 5, team: 'JOVO 6', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 6, team: 'HBC 4', games: 0, wins: 0, draws: 0, losses: 0, points: 0 }
         ]
     },
     'VDO 1 Duo': {
         class: '3e klasse',
-        poule: 'A',
+        poule: 'B',
         members: [
-            'R.C. Peters (Roy)',
             'A.J. Kas (Astrid)',
-            'R.M. de Boer (Richard)'
+            'R.M. de Boer (Richard)',
+            'R.C. Peters (Roy)'
         ],
         standings: [
-            { position: 1, team: 'Rapidity 1', games: 8, wins: 6, draws: 0, losses: 2, points: 27 },
-            { position: 2, team: 'Amstelveen 2', games: 8, wins: 5, draws: 0, losses: 3, points: 21 },
-            { position: 3, team: 'VDO 1 Duo', games: 8, wins: 4, draws: 0, losses: 4, points: 19 },
-            { position: 4, team: 'US 3', games: 8, wins: 4, draws: 0, losses: 4, points: 19 },
-            { position: 5, team: 'Castricum 2', games: 8, wins: 2, draws: 0, losses: 6, points: 14 }
+            { position: 1, team: 'TSTZ-Haarlem 4', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 2, team: 'Diemen 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 3, team: 'HTC 3', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 4, team: 'Rapidity 4', games: 0, wins: 0, draws: 0, losses: 0, points: 0 },
+            { position: 5, team: 'VDO 1', games: 0, wins: 0, draws: 0, losses: 0, points: 0 }
         ]
     },
     'VDO 1 Jeugd': {
-        class: 'Klasse A',
-        poule: 'B',
+        class: '5e klasse',
+        poule: 'C',
         members: [
             'R.G. Gibadullin (Renald)',
             'W.H. Ye (Wystan)',
@@ -370,54 +267,251 @@ const teamStandings = {
             { position: 4, team: 'Diemen 1', games: 8, wins: 4, draws: 0, losses: 3, points: 21 },
             { position: 5, team: 'Rapidity 2', games: 8, wins: 1, draws: 0, losses: 7, points: 2 }
         ]
+    },
+    'VDO 1 Jeugd Starters': {
+        class: 'Groep A',
+        poule: 'B',
+        members: [
+            'N.E.J.W. Lee (Nathan)',
+            'O.R. Warger (Otis)',
+            'K.S.D. van Dijk (Koen)',
+            'R. Müller (Ryan)',
+            'N. Demaret (Nina)'
+        ],
+        standings: []
     }
 };
 
-// Modal elements
-const modal = document.getElementById('team-modal');
-const modalTeamName = document.getElementById('modal-team-name');
-const modalTeamClass = document.getElementById('modal-team-class');
-const modalTeamPoule = document.getElementById('modal-team-poule');
-const standingsBody = document.getElementById('standings-body');
-const closeBtn = document.querySelector('.modal-close');
+// Modal elements (will be initialized in DOMContentLoaded)
+let modal;
+let modalTeamName;
+let modalTeamClass;
+let modalTeamPoule;
+let standingsBody;
+let closeBtn;
 
-// Open modal when team card is clicked
-document.addEventListener('DOMContentLoaded', function() {
-    const teamCards = document.querySelectorAll('.team-card');
+// Handle team card click
+function handleTeamCardClick(e, card) {
+    e.stopPropagation();
+    e.preventDefault();
     
-    teamCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const teamName = this.getAttribute('data-team');
-            const teamClass = this.getAttribute('data-class');
-            const teamPoule = this.getAttribute('data-poule');
-            
-            openModal(teamName, teamClass, teamPoule);
+    const teamName = card.getAttribute('data-team');
+    const teamClass = card.getAttribute('data-class');
+    const teamPoule = card.getAttribute('data-poule');
+    
+    console.log('Team card clicked!', { teamName, teamClass, teamPoule });
+    
+    if (modal && modalTeamName && modalTeamClass && modalTeamPoule && standingsBody) {
+        console.log('Opening modal...');
+        openModal(teamName, teamClass, teamPoule);
+    } else {
+        console.error('Modal elements not found:', {
+            modal: !!modal,
+            modalTeamName: !!modalTeamName,
+            modalTeamClass: !!modalTeamClass,
+            modalTeamPoule: !!modalTeamPoule,
+            standingsBody: !!standingsBody
         });
+    }
+}
+
+// Function to initialize modal functionality
+function initModal() {
+    // Initialize modal elements
+    modal = document.getElementById('team-modal');
+    modalTeamName = document.getElementById('modal-team-name');
+    modalTeamClass = document.getElementById('modal-team-class');
+    modalTeamPoule = document.getElementById('modal-team-poule');
+    standingsBody = document.getElementById('standings-body');
+    closeBtn = document.querySelector('.modal-close');
+
+    console.log('Initializing modal...', {
+        modal: !!modal,
+        modalTeamName: !!modalTeamName,
+        modalTeamClass: !!modalTeamClass,
+        modalTeamPoule: !!modalTeamPoule,
+        standingsBody: !!standingsBody
+    });
+    
+    // Use event delegation for "Bekijk Standen" buttons (works even if buttons are added later)
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.view-standings-btn');
+        if (btn) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            const teamName = btn.getAttribute('data-team');
+            const teamClass = btn.getAttribute('data-class');
+            const teamPoule = btn.getAttribute('data-poule');
+            
+            console.log('View standings button clicked!', { teamName, teamClass, teamPoule });
+            
+            if (modal && modalTeamName && modalTeamClass && modalTeamPoule && standingsBody) {
+                console.log('Opening modal...');
+                openModal(teamName, teamClass, teamPoule);
+            } else {
+                console.error('Modal elements not found', {
+                    modal: !!modal,
+                    modalTeamName: !!modalTeamName,
+                    modalTeamClass: !!modalTeamClass,
+                    modalTeamPoule: !!modalTeamPoule,
+                    standingsBody: !!standingsBody
+                });
+            }
+        }
+    });
+    
+    // Also add direct listeners as backup
+    const viewStandingsButtons = document.querySelectorAll('.view-standings-btn');
+    console.log('Found view standings buttons:', viewStandingsButtons.length);
+    
+    viewStandingsButtons.forEach((btn, index) => {
+        const teamName = btn.getAttribute('data-team');
+        console.log(`Button ${index + 1}:`, teamName);
+    });
+    
+    // Also keep card click functionality as fallback
+    const teamCards = document.querySelectorAll('.team-card');
+    console.log('Found team cards:', teamCards.length);
+    
+    teamCards.forEach((card, index) => {
+        const teamName = card.getAttribute('data-team');
+        console.log(`Adding click listener to card ${index + 1}:`, teamName);
+        
+        // Add click listener to the card itself - use capture phase
+        card.addEventListener('click', function(e) {
+            // Only handle if not clicking on the button
+            if (!e.target.closest('.view-standings-btn')) {
+                console.log('Click detected on card:', teamName);
+                handleTeamCardClick(e, this);
+            }
+        }, true); // Capture phase - catches clicks before they bubble
     });
     
     // Close modal when close button is clicked
     if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeModal();
+        });
     }
     
-    // Close modal when clicking outside of it
+    // Close modal when clicking outside of it (on the backdrop)
     if (modal) {
         modal.addEventListener('click', function(e) {
+            // Only close if clicking directly on the modal backdrop, not on modal-content
             if (e.target === modal) {
                 closeModal();
             }
         });
+        
+        // Prevent modal-content clicks from closing the modal
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
     }
     
     // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
+        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
             closeModal();
         }
     });
-});
+}
+
+// Initialize when DOM is ready
+function initializeModalSystem() {
+    // Wait a bit to ensure all elements are in the DOM
+    setTimeout(() => {
+        initModal();
+    }, 100);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeModalSystem);
+} else {
+    // DOM is already loaded
+    initializeModalSystem();
+}
+
+// Also try to initialize after a short delay as fallback
+setTimeout(() => {
+    const buttons = document.querySelectorAll('.view-standings-btn');
+    if (buttons.length > 0 && (!modal || !modalTeamName)) {
+        console.log('Re-initializing modal system...');
+        initModal();
+    }
+}, 500);
+
+// Test function - can be called from console: testModal()
+window.testModal = function() {
+    console.log('Testing modal...');
+    const testCard = document.querySelector('.team-card');
+    if (testCard) {
+        console.log('Found test card:', testCard.getAttribute('data-team'));
+        const teamName = testCard.getAttribute('data-team');
+        const teamClass = testCard.getAttribute('data-class');
+        const teamPoule = testCard.getAttribute('data-poule');
+        if (modal && modalTeamName && modalTeamClass && modalTeamPoule && standingsBody) {
+            console.log('All modal elements found, opening modal...');
+            openModal(teamName, teamClass, teamPoule);
+        } else {
+            console.error('Modal elements missing');
+        }
+    } else {
+        console.error('No team cards found');
+    }
+};
+
+// Test button click function
+window.testButton = function() {
+    console.log('Testing button click...');
+    const btn = document.querySelector('.view-standings-btn');
+    if (btn) {
+        console.log('Found button:', btn.getAttribute('data-team'));
+        btn.click();
+    } else {
+        console.error('No button found');
+    }
+};
 
 function openModal(teamName, teamClass, teamPoule) {
+    console.log('openModal called with:', { teamName, teamClass, teamPoule });
+    
+    // Re-check modal elements in case they weren't initialized
+    if (!modal) {
+        modal = document.getElementById('team-modal');
+    }
+    if (!modalTeamName) {
+        modalTeamName = document.getElementById('modal-team-name');
+    }
+    if (!modalTeamClass) {
+        modalTeamClass = document.getElementById('modal-team-class');
+    }
+    if (!modalTeamPoule) {
+        modalTeamPoule = document.getElementById('modal-team-poule');
+    }
+    if (!standingsBody) {
+        standingsBody = document.getElementById('standings-body');
+    }
+    
+    if (!modal || !modalTeamName || !modalTeamClass || !modalTeamPoule || !standingsBody) {
+        console.error('Modal elements not found', {
+            modal: !!modal,
+            modalTeamName: !!modalTeamName,
+            modalTeamClass: !!modalTeamClass,
+            modalTeamPoule: !!modalTeamPoule,
+            standingsBody: !!standingsBody
+        });
+        alert('Er is een probleem met het laden van de standen. Controleer de console voor details.');
+        return;
+    }
+    
+    console.log('All modal elements found, updating content...');
+    
     // Update modal header
     modalTeamName.textContent = teamName;
     modalTeamClass.textContent = teamClass;
@@ -463,11 +557,18 @@ function openModal(teamName, teamClass, teamPoule) {
     }
     
     // Show modal
+    console.log('Adding active class to modal...');
     modal.classList.add('active');
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    
+    console.log('Modal should now be visible. Modal classes:', modal.className);
+    console.log('Modal display style:', window.getComputedStyle(modal).display);
 }
 
 function closeModal() {
+    if (!modal) {
+        return;
+    }
     modal.classList.remove('active');
     document.body.style.overflow = ''; // Restore scrolling
 }

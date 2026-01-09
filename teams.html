@@ -23,6 +23,11 @@
 <li><a data-en="Sponsors" data-nl="Sponsors" href="sponsors.html">Sponsors</a></li>
 <li><a data-en="Join" data-nl="Inschrijven" href="index.html#inschrijven">Inschrijven</a></li>
 </ul>
+<div class="theme-toggle">
+<button aria-label="Toggle theme" class="theme-switch" id="theme-toggle" title="Wissel thema">
+<span class="theme-icon">🎨</span>
+</button>
+</div>
 <div class="language-toggle">
 <button aria-label="Toggle language" class="language-switch" id="language-toggle">
 <span class="language-text">EN</span>
@@ -39,7 +44,6 @@
 <section class="hero" style="min-height: 15vh; padding: 40px 20px;">
 <div class="hero-content">
 <h1 class="hero-title" data-en="Teams" data-nl="Teams">Teams</h1>
-<button id="updateTeamsBtn" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem;" data-en="Update Teams" data-nl="Teams Bijwerken">Teams Bijwerken</button>
 </div>
 </section>
 <section class="teams-section">
@@ -63,20 +67,20 @@
 <div class="team-members">
 <h3 class="members-title">Teamleden</h3>
 <ul class="members-list">
-<li>P.H.L. Bakker (Paul)</li>
 <li>D. Slegt (Dion)</li>
+<li>P.H.L. Bakker (Paul)</li>
 <li>M. van Dijk (Martijn)</li>
 <li>L. Hoogland (Lars)</li>
 </ul>
 </div>
 </div>
 <!-- VDO 2 -->
-<div class="team-card fade-in" data-class="1e klasse" data-poule="D" data-team="VDO 2">
+<div class="team-card fade-in" data-class="2e klasse" data-poule="D" data-team="VDO 2">
 <div class="team-header">
 <h2 class="team-name">VDO 2</h2>
 <div class="team-class">
 <span class="class-label">Klasse:</span>
-<span class="class-value">1e klasse</span>
+<span class="class-value">2e klasse</span>
 </div>
 <div class="team-poule">
 <span class="poule-label">Poule:</span>
@@ -88,38 +92,63 @@
 <ul class="members-list">
 <li>R. Vos (Richard)</li>
 <li>D. Demaret (Daniël)</li>
-<li>H. Sanlitürk (Hakan)</li>
 <li>P.R. Peters (Per)</li>
+<li>H. Sanlitürk (Hakan)</li>
 </ul>
 </div>
 </div>
 <!-- VDO 3 -->
-<div class="team-card fade-in" data-class="3e klasse" data-poule="G" data-team="VDO 3">
+<div class="team-card fade-in" data-class="2e klasse" data-poule="F" data-team="VDO 3">
 <div class="team-header">
 <h2 class="team-name">VDO 3</h2>
 <div class="team-class">
 <span class="class-label">Klasse:</span>
-<span class="class-value">3e klasse</span>
+<span class="class-value">2e klasse</span>
 </div>
 <div class="team-poule">
 <span class="poule-label">Poule:</span>
-<span class="poule-value">G</span>
+<span class="poule-value">F</span>
 </div>
 </div>
 <div class="team-members">
 <h3 class="members-title">Teamleden</h3>
 <ul class="members-list">
-<li>S.T. Visser (Sjoerd)</li>
 <li>J.M. Filius (Joscha)</li>
+<li>S.T. Visser (Sjoerd)</li>
+<li>M. van der Wal (Marco)</li>
 <li>S. van der Wal (Stefan)</li>
 <li>L. Hu (Leo)</li>
 </ul>
 </div>
 </div>
 <!-- VDO 4 -->
-<div class="team-card fade-in" data-class="3e klasse" data-poule="D" data-team="VDO 4">
+<div class="team-card fade-in" data-class="3e klasse" data-poule="F" data-team="VDO 4">
 <div class="team-header">
 <h2 class="team-name">VDO 4</h2>
+<div class="team-class">
+<span class="class-label">Klasse:</span>
+<span class="class-value">3e klasse</span>
+</div>
+<div class="team-poule">
+<span class="poule-label">Poule:</span>
+<span class="poule-value">F</span>
+</div>
+</div>
+<div class="team-members">
+<h3 class="members-title">Teamleden</h3>
+<ul class="members-list">
+<li>R.A. van der Jagt (René)</li>
+<li>R.E. Wouters (Rob)</li>
+<li>M.F. van Rossum (Maarten)</li>
+<li>R.R. Tessensohn (Raymond)</li>
+<li>R.M. de Boer (Richard)</li>
+</ul>
+</div>
+</div>
+<!-- VDO 5 -->
+<div class="team-card fade-in" data-class="3e klasse" data-poule="D" data-team="VDO 5">
+<div class="team-header">
+<h2 class="team-name">VDO 5</h2>
 <div class="team-class">
 <span class="class-label">Klasse:</span>
 <span class="class-value">3e klasse</span>
@@ -132,33 +161,36 @@
 <div class="team-members">
 <h3 class="members-title">Teamleden</h3>
 <ul class="members-list">
-<li>R.A. van der Jagt (René)</li>
 <li>A.J. Kas (Astrid)</li>
-<li>M.F. van Rossum (Maarten)</li>
-<li>R.E. Wouters (Rob)</li>
+<li>T. Valkenburg (Teun)</li>
+<li>R.R. Allard (Ragnar)</li>
+<li>J.J.M. van der Wal (Jan)</li>
+<li>J. Flach (Joost)</li>
+<li>K. Buis (Kevin)</li>
 </ul>
 </div>
 </div>
-<!-- VDO 5 -->
-<div class="team-card fade-in" data-class="4e klasse" data-poule="G" data-team="VDO 5">
+<!-- VDO 6 -->
+<div class="team-card fade-in" data-class="5e klasse" data-poule="C" data-team="VDO 6">
 <div class="team-header">
-<h2 class="team-name">VDO 5</h2>
+<h2 class="team-name">VDO 6</h2>
 <div class="team-class">
 <span class="class-label">Klasse:</span>
-<span class="class-value">4e klasse</span>
+<span class="class-value">5e klasse</span>
 </div>
 <div class="team-poule">
 <span class="poule-label">Poule:</span>
-<span class="poule-value">G</span>
+<span class="poule-value">C</span>
 </div>
 </div>
 <div class="team-members">
 <h3 class="members-title">Teamleden</h3>
 <ul class="members-list">
-<li>T. Valkenburg (Teun)</li>
-<li>J. Flach (Joost)</li>
-<li>R.R. Allard (Ragnar)</li>
-<li>J.J.M. van der Wal (Jan)</li>
+<li>C.M. Heine (Collin)</li>
+<li>F. Groenevelt (Frederiek)</li>
+<li>M. Over (Marije)</li>
+<li>S. Demaret (Sebastiaan)</li>
+<li>R. van der Wal (Ria)</li>
 </ul>
 </div>
 </div>
@@ -167,38 +199,12 @@
 <h2 class="section-title" data-en="Duo" data-nl="Duo" style="margin-top: 3rem; margin-bottom: 1.5rem; font-size: 2rem; color: var(--text-color);">Duo</h2>
 <div class="teams-grid">
 <!-- VDO 1 Duo -->
-<div class="team-card fade-in" data-class="3e klasse" data-poule="A" data-team="VDO 1 Duo">
+<div class="team-card fade-in" data-class="3e klasse" data-poule="B" data-team="VDO 1 Duo">
 <div class="team-header">
 <h2 class="team-name">VDO 1 Duo</h2>
 <div class="team-class">
 <span class="class-label">Klasse:</span>
 <span class="class-value">3e klasse</span>
-</div>
-<div class="team-poule">
-<span class="poule-label">Poule:</span>
-<span class="poule-value">A</span>
-</div>
-</div>
-<div class="team-members">
-<h3 class="members-title">Teamleden</h3>
-<ul class="members-list">
-<li>R.C. Peters (Roy)</li>
-<li>A.J. Kas (Astrid)</li>
-<li>R.M. de Boer (Richard)</li>
-</ul>
-</div>
-</div>
-</div>
-<!-- Jeugd -->
-<h2 class="section-title" data-en="Youth" data-nl="Jeugd" style="margin-top: 3rem; margin-bottom: 1.5rem; font-size: 2rem; color: var(--text-color);">Jeugd</h2>
-<div class="teams-grid">
-<!-- VDO 1 Jeugd -->
-<div class="team-card fade-in" data-class="Klasse A" data-poule="B" data-team="VDO 1 Jeugd">
-<div class="team-header">
-<h2 class="team-name">VDO 1 Jeugd</h2>
-<div class="team-class">
-<span class="class-label">Klasse:</span>
-<span class="class-value">Klasse A</span>
 </div>
 <div class="team-poule">
 <span class="poule-label">Poule:</span>
@@ -208,9 +214,59 @@
 <div class="team-members">
 <h3 class="members-title">Teamleden</h3>
 <ul class="members-list">
+<li>A.J. Kas (Astrid)</li>
+<li>R.M. de Boer (Richard)</li>
+<li>R.C. Peters (Roy)</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Jeugd -->
+<h2 class="section-title" data-en="Youth" data-nl="Jeugd" style="margin-top: 3rem; margin-bottom: 1.5rem; font-size: 2rem; color: var(--text-color);">Jeugd</h2>
+<div class="teams-grid">
+<!-- VDO 1 Jeugd -->
+<div class="team-card fade-in" data-class="5e klasse" data-poule="C" data-team="VDO 1 Jeugd">
+<div class="team-header">
+<h2 class="team-name">VDO 1 Jeugd</h2>
+<div class="team-class">
+<span class="class-label">Klasse:</span>
+<span class="class-value">5e klasse</span>
+</div>
+<div class="team-poule">
+<span class="poule-label">Poule:</span>
+<span class="poule-value">C</span>
+</div>
+</div>
+<div class="team-members">
+<h3 class="members-title">Teamleden</h3>
+<ul class="members-list">
 <li>R.G. Gibadullin (Renald)</li>
 <li>W.H. Ye (Wystan)</li>
 <li>J. Haak (Jelte)</li>
+</ul>
+</div>
+</div>
+<!-- VDO 1 Jeugd Starters -->
+<div class="team-card fade-in" data-class="Groep A" data-poule="B" data-team="VDO 1 Jeugd Starters">
+<div class="team-header">
+<h2 class="team-name">VDO 1 Jeugd Starters</h2>
+<div class="team-class">
+<span class="class-label">Klasse:</span>
+<span class="class-value">Groep A</span>
+</div>
+<div class="team-poule">
+<span class="poule-label">Poule:</span>
+<span class="poule-value">B</span>
+</div>
+</div>
+<div class="team-members">
+<h3 class="members-title">Teamleden</h3>
+<ul class="members-list">
+<li>N.E.J.W. Lee (Nathan)</li>
+<li>O.R. Warger (Otis)</li>
+<li>K.S.D. van Dijk (Koen)</li>
+<li>R. Müller (Ryan)</li>
+<li>N. Demaret (Nina)</li>
 </ul>
 </div>
 </div>

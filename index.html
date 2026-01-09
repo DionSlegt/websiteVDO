@@ -5,7 +5,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="VDO - Professionele dienstverlening" name="description"/>
-    <title>VDO - Welkom</title>
+    <title>VDO - VDO Uithoorn</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/css/splide.min.css">
 <link href="styles.css" rel="stylesheet"/>
 </head>
 <body><header>
@@ -23,6 +24,11 @@
 <li><a data-en="Sponsors" data-nl="Sponsors" href="sponsors.html">Sponsors</a></li>
 <li><a data-en="Join" data-nl="Inschrijven" href="index.html#inschrijven">Inschrijven</a></li>
                 </ul>
+                <div class="theme-toggle">
+<button aria-label="Toggle theme" class="theme-switch" id="theme-toggle" title="Wissel thema">
+                        <span class="theme-icon">🎨</span>
+                    </button>
+                </div>
                 <div class="language-toggle">
 <button aria-label="Toggle language" class="language-switch" id="language-toggle">
                         <span class="language-text">EN</span>
@@ -36,7 +42,7 @@
     </header>
 
     <main>
-<section class="hero" id="home">
+        <section class="hero" id="home">
             <div class="hero-content">
                 <div class="hero-left">
 <h1 class="hero-title" data-en="VDO Uithoorn" data-nl="VDO Uithoorn">VDO Uithoorn</h1>
@@ -45,42 +51,46 @@
                 </div>
                 <div class="hero-right">
                     <div class="hero-media">
-<video class="hero-video" muted="" playsinline="" preload="auto">
-<source src="artwork/Badje%20transparant.webm" type="video/webm"/>
+                        <video class="hero-video" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+                            <source src="artwork/ALL_converted_final.webm" type="video/webm">
                         </video>
                     </div>
                 </div>
+                <div class="ball-container">
+                    <div id="ball"></div>
+                </div>
+                <audio id="hit-sound" preload="auto">
+                    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2LwU" type="audio/wav">
+                </audio>
             </div>
         </section>
 <section class="about" id="over">
             <div class="container">
-<h2 data-en="About VDO" data-nl="Over VDO">Over VDO</h2>
                 <div class="about-content">
 <p data-en="VDO is a table tennis club in Uithoorn for young and old, for recreational and competitive players." data-nl="VDO is een tafeltennisvereniging in Uithoorn voor jong en oud, voor recreanten en voor competitie spelers.">VDO is een tafeltennisvereniging in Uithoorn voor jong en oud, voor recreanten en voor competitie spelers.</p>
-<p data-en="We organize many different activities, of course in the field of table tennis, but also in other areas." data-nl="We organiseren veel verschillende activiteiten, uiteraard op het gebied van tafeltennis, maar ook op andere gebieden.">We organiseren veel verschillende activiteiten, uiteraard op het gebied van tafeltennis, maar ook op andere gebieden.</p>
+<p data-en="We organize training sessions, activities, and tournaments." data-nl="We organiseren trainingen, activiteiten, en toernooien.">We organiseren trainingen, activiteiten, en toernooien.</p>
 <p data-en="We have active youth and senior departments." data-nl="We hebben actieve jeugd en senioren afdelingen.">We hebben actieve jeugd en senioren afdelingen.</p>
 <p data-en="Interested? Come visit the club or inquire about the possibilities." data-nl="Interesse? Kom eens langs op de club of informeer naar de mogelijkheden.">Interesse? Kom eens langs op de club of informeer naar de mogelijkheden.</p>
                 </div>
             </div>
         </section>
-        <section class="scroll-video" id="scrollVideo">
-            <div class="scroll-video__scrub" id="scrollVideoScrub">
-                <div class="scroll-video__sticky">
-                    <video
-                        id="bgVideo"
-                        class="scroll-video__video"
-                        muted
-                        playsinline
-                        preload="auto"
-                        disablepictureinpicture
-                        tabindex="-1"
-                    >
-                        <source src="artwork/tafel-transparant_v2.webm" type="video/webm">
-                    </video>
+        <section class="photo-gallery" id="fotos">
+            <div id="image-carousel" class="splide">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        <li class="splide__slide"><img src="artwork/IMG_0651.png" alt="VDO Foto 1"></li>
+                        <li class="splide__slide"><img src="artwork/IMG_0651 copy.png" alt="VDO Foto 2"></li>
+                        <li class="splide__slide"><img src="artwork/IMG_0651 copy 2.png" alt="VDO Foto 3"></li>
+                        <li class="splide__slide"><img src="artwork/IMG_0654.png" alt="VDO Foto 4"></li>
+                        <li class="splide__slide"><img src="artwork/IMG_0654 copy.png" alt="VDO Foto 5"></li>
+                        <li class="splide__slide"><img src="artwork/IMG_0654 copy 2.png" alt="VDO Foto 6"></li>
+                        <li class="splide__slide"><img src="artwork/IMG_0656.png" alt="VDO Foto 7"></li>
+                        <li class="splide__slide"><img src="artwork/IMG_0656 copy.png" alt="VDO Foto 8"></li>
+                        <li class="splide__slide"><img src="artwork/IMG_0656 copy 2.png" alt="VDO Foto 9"></li>
+                    </ul>
                 </div>
             </div>
         </section>
-<hr class="section-divider"/>
 <section class="location" id="locatie">
             <div class="container">
 <h2 data-en="Our Location" data-nl="Onze Locatie">Onze Locatie</h2>
@@ -89,9 +99,8 @@
                         <div class="location-card">
                             <div class="location-icon">📍</div>
                             <div class="location-address-block">
-                                <p class="location-address">Eendracht 4</p>
-                                <p class="location-details">Meerwijk-Oost</p>
-                                <p class="location-details">Uithoorn</p>
+                            <p class="location-address">Eendracht 4</p>
+                                <p class="location-details">1423 ET Uithoorn</p>
                             </div>
                         </div>
                         <a class="cta-button location-button" data-en="Navigate with Google Maps" data-nl="Navigeer met Google Maps" href="https://www.google.com/maps/dir/?api=1&amp;destination=Eendracht+4,+Meerwijk-Oost,+Uithoorn" target="_blank">
@@ -138,5 +147,7 @@
             </div>
 <p class="footer-copyright" data-en="© 2025 VDO. All rights reserved." data-nl="© 2025 VDO. Alle rechten voorbehouden.">© 2025 VDO. Alle rechten voorbehouden.</p>
         </div>
-</footer><script src="script.js"></script><script src="cms-loader.js"></script></body>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>
+<script src="script.js"></script><script src="cms-loader.js"></script></body>
 </html>
