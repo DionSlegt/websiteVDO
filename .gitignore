@@ -13,6 +13,7 @@ Adobe After Effects Auto-Save/
 # Uitzondering voor hero video's
 !artwork/ALL_converted_final.webm
 !artwork/Badje_2_converted.webm
+!artwork/Locatie.webm
 
 # Node
 node_modules/
