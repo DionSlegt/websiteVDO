@@ -29,11 +29,36 @@ async function loadHomeContent() {
 
             const aboutContent = document.querySelector('.about-content');
             if (aboutContent && homeData.aboutText) {
-                const html = homeData.aboutText
-                    .split('\n\n')
-                    .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+                // Support both old format (string) and new format (object with nl/en)
+                const aboutText = typeof homeData.aboutText === 'string' 
+                    ? homeData.aboutText 
+                    : (homeData.aboutText.nl || homeData.aboutText);
+                const aboutTextEn = typeof homeData.aboutText === 'object' 
+                    ? (homeData.aboutText.en || '') 
+                    : '';
+                
+                const paragraphs = aboutText.split('\n\n');
+                const paragraphsEn = aboutTextEn ? aboutTextEn.split('\n\n') : [];
+                
+                const html = paragraphs
+                    .map((para, index) => {
+                        const paraEn = paragraphsEn[index] || '';
+                        const paraText = para.replace(/\n/g, '<br>');
+                        const paraTextEn = paraEn.replace(/\n/g, '<br>');
+                        if (paraEn) {
+                            return `<p data-nl="${para.replace(/"/g, '&quot;')}" data-en="${paraEn.replace(/"/g, '&quot;')}">${paraText}</p>`;
+                        } else {
+                            return `<p>${paraText}</p>`;
+                        }
+                    })
                     .join('');
                 aboutContent.innerHTML = html;
+                
+                // Update language after content is loaded
+                const currentLang = document.documentElement.getAttribute('lang') || 'nl';
+                if (typeof updateLanguage === 'function') {
+                    updateLanguage(currentLang);
+                }
             }
 
             const inschrijvenText = document.querySelector('#inschrijven .contact-info p');

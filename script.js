@@ -326,37 +326,9 @@ function updateLanguage(lang) {
             }
         }
         
-        // Location section - hele blok beweegt langzamer
-        const location = document.querySelector('.location');
-        if (location) {
-            const locationRect = location.getBoundingClientRect();
-            const locationTop = locationRect.top + scrollY;
-            const locationHeight = location.offsetHeight;
-            
-            if (scrollY >= locationTop - windowHeight && scrollY <= locationTop + locationHeight) {
-                const scrollProgress = (scrollY - locationTop + windowHeight) / (locationHeight + windowHeight);
-                const parallaxValue = scrollProgress * 250;
-                
-                // Hele location sectie beweegt langzamer
-                location.style.transform = `translateY(${parallaxValue * 0.5}px) translateZ(0)`;
-            }
-        }
+        // Location section parallax UITGEZET - voorkomt bleed-through in fullscreen sectie
         
-        // Contact section - hele blok beweegt sneller
-        const contact = document.querySelector('.contact');
-        if (contact) {
-            const contactRect = contact.getBoundingClientRect();
-            const contactTop = contactRect.top + scrollY;
-            const contactHeight = contact.offsetHeight;
-            
-            if (scrollY >= contactTop - windowHeight && scrollY <= contactTop + contactHeight) {
-                const scrollProgress = (scrollY - contactTop + windowHeight) / (contactHeight + windowHeight);
-                const parallaxValue = scrollProgress * 180;
-                
-                // Hele contact sectie beweegt sneller
-                contact.style.transform = `translateY(${parallaxValue * -0.4}px) translateZ(0)`;
-            }
-        }
+        // Contact section parallax UITGEZET - voorkomt conflicten met crossfade overlay
         
         // Teams section - hele blok beweegt langzamer
         const teamsSection = document.querySelector('.teams-section');
@@ -591,3 +563,176 @@ function updateLanguage(lang) {
         }
     }
 })();
+
+// Echte cross-fade (Parsec-stijl) - bidirectionele state-machine
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollSection = document.querySelector('.locatie-scroll');
+    const locatieLayer = document.querySelector('.locatie-layer');
+    const lidLayer = document.querySelector('.lid-worden-layer');
+    const locatiePops = document.querySelectorAll('.locatie-layer .pop');
+    const lidPops = document.querySelectorAll('.lid-worden-layer .pop');
+    
+    if (!scrollSection || !locatieLayer || !lidLayer) return;
+    
+    // State machine: 'locatie' of 'lid'
+    let state = 'locatie';
+    let isAnimating = false;
+    let lastScrollY = window.scrollY;
+    let isInitialized = false;
+    
+    // Scroll buffer / dead zone (voorkomt te snelle trigger)
+    const buffer = window.innerHeight * 0.3; // 30% van viewport hoogte (schaalt mee)
+    
+    // Initialiseer state op basis van huidige scroll positie
+    const initializeState = () => {
+        const rect = scrollSection.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const scrollHeight = rect.height;
+        
+        // Als scrollSection nog niet sticky is (rect.top > 0), altijd 'locatie'
+        if (rect.top > 0) {
+            state = 'locatie';
+            locatiePops.forEach(el => {
+                el.classList.remove('pop-out');
+                el.classList.add('visible');
+            });
+            return;
+        }
+        
+        // Nu is sticky actief (rect.top <= 0)
+        const stickyProgress = Math.min(Math.max(-rect.top / (scrollHeight - vh), 0), 1);
+        const triggerPoint = 0.2;
+        const scrollDistance = -rect.top;
+        const maxScrollDistance = scrollHeight - vh;
+        
+        // Bepaal state op basis van scroll positie
+        if (stickyProgress > triggerPoint && scrollDistance > (triggerPoint * maxScrollDistance) + buffer) {
+            state = 'lid';
+            locatieLayer.classList.add('fade-out');
+            lidLayer.classList.add('fade-in');
+            locatiePops.forEach(el => {
+                el.classList.remove('visible');
+                el.classList.add('pop-out');
+            });
+            lidPops.forEach(el => el.classList.add('pop-in'));
+        } else {
+            state = 'locatie';
+            locatiePops.forEach(el => {
+                el.classList.remove('pop-out');
+                el.classList.add('visible');
+            });
+        }
+    };
+    
+    // Initialiseer state bij laden (na een korte delay om ervoor te zorgen dat alles geladen is)
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            initializeState();
+            isInitialized = true;
+        });
+    });
+    
+    // Bepaal trigger punt (20% in sticky fase)
+    const getTriggerPoint = () => {
+        const rect = scrollSection.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const scrollHeight = rect.height;
+        return scrollSection.offsetTop + (scrollHeight - vh) * 0.2;
+    };
+    
+    // Functie: ga naar 'lid worden'
+    const goToLid = () => {
+        if (isAnimating || state === 'lid') return;
+        
+        isAnimating = true;
+        state = 'lid';
+        
+        // Zet classes - CSS regelt de rest
+        locatieLayer.classList.add('fade-out');
+        lidLayer.classList.add('fade-in');
+        
+        // Content pop-effecten
+        locatiePops.forEach(el => {
+            el.classList.remove('visible');
+            el.classList.add('pop-out');
+        });
+        lidPops.forEach((el) => {
+            const isIcon = el.classList.contains('download-icon-img') || el.closest('.location-media');
+            if (isIcon) {
+                setTimeout(() => el.classList.add('pop-in'), 20);
+            } else {
+                setTimeout(() => el.classList.add('pop-in'), 80);
+            }
+        });
+        
+        // Reset na animatie duur
+        setTimeout(() => {
+            isAnimating = false;
+        }, 300);
+    };
+    
+    // Functie: ga terug naar 'locatie'
+    const goToLocatie = () => {
+        if (isAnimating || state === 'locatie') return;
+        
+        isAnimating = true;
+        state = 'locatie';
+        
+        // Verwijder classes - CSS regelt de rest
+        locatieLayer.classList.remove('fade-out');
+        lidLayer.classList.remove('fade-in');
+        
+        // Content pop-effecten terug
+        locatiePops.forEach(el => {
+            el.classList.remove('pop-out');
+            el.classList.add('visible');
+        });
+        lidPops.forEach(el => {
+            el.classList.remove('pop-in');
+        });
+        
+        // Reset na animatie duur
+        setTimeout(() => {
+            isAnimating = false;
+        }, 300);
+    };
+    
+    window.addEventListener('scroll', () => {
+        if (isAnimating || !isInitialized) return; // Blokkeer tijdens animatie of tijdens initialisatie
+        
+        const rect = scrollSection.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const scrollHeight = rect.height;
+        const currentScrollY = window.scrollY;
+        const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+        lastScrollY = currentScrollY;
+        
+        // Als scrollSection nog niet sticky is (rect.top > 0), altijd 'locatie'
+        if (rect.top > 0) {
+            if (state !== 'locatie') {
+                goToLocatie();
+            }
+            return;
+        }
+        
+        // Nu is sticky actief (rect.top <= 0)
+        const stickyProgress = Math.min(Math.max(-rect.top / (scrollHeight - vh), 0), 1);
+        const triggerPoint = 0.2;
+        
+        // Bereken scroll afstand binnen sticky fase
+        const scrollDistance = -rect.top; // Hoeveel we binnen sticky fase hebben gescrolld
+        const maxScrollDistance = scrollHeight - vh; // Maximale scroll afstand binnen sticky
+        
+        // Naar beneden → Locatie → Lid (met buffer: pas na extra scroll)
+        // Trigger punt + buffer = gebruiker moet bewust scrollen voordat animatie start
+        if (stickyProgress > triggerPoint && scrollDistance > (triggerPoint * maxScrollDistance) + buffer && state === 'locatie') {
+            goToLid();
+        }
+        
+        // Naar boven ← Lid ← Locatie (met buffer: pas na extra scroll terug)
+        // Trigger punt - buffer = gebruiker moet bewust terug scrollen
+        if (stickyProgress <= triggerPoint && scrollDistance < (triggerPoint * maxScrollDistance) - buffer && state === 'lid') {
+            goToLocatie();
+        }
+    }, { passive: true });
+});

@@ -1,5 +1,8 @@
 {
   "heroTitle": "VDO Uithoorn",
-  "aboutText": "VDO is een tafeltennisvereniging in Uithoorn voor jong en oud, voor recreanten en voor competitie spelers.\n\nWe organiseren veel verschillende activiteiten, uiteraard op het gebied van tafeltennis, maar ook op andere gebieden.\n\nWe hebben actieve jeugd en senioren afdelingen.\n\nInteresse? Kom eens langs op de club of informeer naar de mogelijkheden.",
+  "aboutText": {
+    "nl": "VDO is een tafeltennisvereniging in Uithoorn voor jong en oud, voor recreanten en voor competitie spelers.\n\nWe organiseren veel verschillende activiteiten, uiteraard op het gebied van tafeltennis, maar ook op andere gebieden.\n\nWe hebben actieve jeugd en senioren afdelingen.\n\nInteresse? Kom eens langs op de club of informeer naar de mogelijkheden.",
+    "en": "VDO is a table tennis club in Uithoorn for young and old, for recreational and competitive players.\n\nWe organize many different activities, naturally in the field of table tennis, but also in other areas.\n\nWe have active youth and senior departments.\n\nInterested? Come visit the club or inquire about the possibilities."
+  },
   "inschrijvenText": "Wil je lid worden van onze tafeltennisvereniging? Download het inschrijfformulier hieronder en stuur het ingevuld op naar ons."
 }
