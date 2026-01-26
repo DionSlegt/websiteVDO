@@ -22,9 +22,105 @@ function initGalleryCarousel() {
     }).mount();
 }
 
+function initGalleryLightbox() {
+    const carousel = document.querySelector('#image-carousel');
+    if (!carousel) return;
+
+    let lightbox = document.querySelector('.gallery-lightbox');
+    if (!lightbox) {
+        lightbox = document.createElement('div');
+        lightbox.className = 'gallery-lightbox';
+        lightbox.setAttribute('role', 'dialog');
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightbox.innerHTML = '<button class="gallery-lightbox-prev" aria-label="Previous">‹</button><button class="gallery-lightbox-next" aria-label="Next">›</button><button class="gallery-lightbox-close" aria-label="Close">×</button><img alt=""/>';
+        document.body.appendChild(lightbox);
+    }
+
+    const lightboxImg = lightbox.querySelector('img');
+    const prevButton = lightbox.querySelector('.gallery-lightbox-prev');
+    const nextButton = lightbox.querySelector('.gallery-lightbox-next');
+    const closeButton = lightbox.querySelector('.gallery-lightbox-close');
+    const galleryImages = Array.from(carousel.querySelectorAll('.splide__slide img'));
+    let currentIndex = -1;
+
+    const showImageAt = (index) => {
+        if (!galleryImages.length) return;
+        const safeIndex = (index + galleryImages.length) % galleryImages.length;
+        const img = galleryImages[safeIndex];
+        currentIndex = safeIndex;
+        openLightbox(img.src, img.alt);
+    };
+
+    const openLightbox = (src, alt) => {
+        if (!src) return;
+        lightboxImg.src = src;
+        lightboxImg.alt = alt || '';
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeLightbox = () => {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        lightboxImg.src = '';
+    };
+
+    carousel.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target && target.tagName === 'IMG') {
+            event.preventDefault();
+            const index = galleryImages.indexOf(target);
+            showImageAt(index);
+        }
+    });
+
+    lightbox.addEventListener('click', (event) => {
+        if (event.target === lightbox) {
+            closeLightbox();
+        }
+    });
+
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            closeLightbox();
+        });
+    }
+
+    if (prevButton) {
+        prevButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            showImageAt(currentIndex - 1);
+        });
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            showImageAt(currentIndex + 1);
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeLightbox();
+        }
+        if (lightbox.classList.contains('open')) {
+            if (event.key === 'ArrowLeft') {
+                showImageAt(currentIndex - 1);
+            }
+            if (event.key === 'ArrowRight') {
+                showImageAt(currentIndex + 1);
+            }
+        }
+    });
+}
+
 // Initialiseer de gallery carousel wanneer de pagina geladen is
 document.addEventListener('DOMContentLoaded', () => {
     initGalleryCarousel();
+    initGalleryLightbox();
 });
 
 const hamburger = document.querySelector('.hamburger');
@@ -294,9 +390,10 @@ function updateLanguage(lang) {
         const scrollY = window.pageYOffset || window.scrollY;
         const windowHeight = window.innerHeight;
         
-        // Hero section - hele blok beweegt langzamer (op alle pagina's)
+        // Hero section - parallax op inner content (geen bleed-through)
         const hero = document.querySelector('.hero');
-        if (hero) {
+        const heroContent = hero ? hero.querySelector('.hero-content') : null;
+        if (hero && heroContent) {
             const heroRect = hero.getBoundingClientRect();
             const heroTop = heroRect.top + scrollY;
             const heroHeight = hero.offsetHeight;
@@ -305,34 +402,23 @@ function updateLanguage(lang) {
                 const scrollProgress = (scrollY - heroTop + windowHeight) / (heroHeight + windowHeight);
                 const parallaxValue = scrollProgress * 300;
                 
-                // Hele hero sectie beweegt langzamer
-                hero.style.transform = `translateY(${parallaxValue * 0.6}px) translateZ(0)`;
+                // Alleen inner content beweegt
+                heroContent.style.transform = `translateY(${parallaxValue * 0.6}px) translateZ(0)`;
+            } else {
+                heroContent.style.transform = 'translateY(0) translateZ(0)';
             }
         }
         
-        // About section - hele blok beweegt sneller
-        const about = document.querySelector('.about');
-        if (about) {
-            const aboutRect = about.getBoundingClientRect();
-            const aboutTop = aboutRect.top + scrollY;
-            const aboutHeight = about.offsetHeight;
-            
-            if (scrollY >= aboutTop - windowHeight && scrollY <= aboutTop + aboutHeight) {
-                const scrollProgress = (scrollY - aboutTop + windowHeight) / (aboutHeight + windowHeight);
-                const parallaxValue = scrollProgress * 200;
-                
-                // Hele about sectie beweegt sneller omhoog
-                about.style.transform = `translateY(${parallaxValue * -0.5}px) translateZ(0)`;
-            }
-        }
+        // About section parallax UIT: content is layout-based (geen bleed-through)
         
         // Location section parallax UITGEZET - voorkomt bleed-through in fullscreen sectie
         
         // Contact section parallax UITGEZET - voorkomt conflicten met crossfade overlay
         
-        // Teams section - hele blok beweegt langzamer
+        // Teams section - parallax op inner container
         const teamsSection = document.querySelector('.teams-section');
-        if (teamsSection) {
+        const teamsInner = teamsSection ? teamsSection.querySelector('.container') : null;
+        if (teamsSection && teamsInner) {
             const teamsRect = teamsSection.getBoundingClientRect();
             const teamsTop = teamsRect.top + scrollY;
             const teamsHeight = teamsSection.offsetHeight;
@@ -341,14 +427,16 @@ function updateLanguage(lang) {
                 const scrollProgress = (scrollY - teamsTop + windowHeight) / (teamsHeight + windowHeight);
                 const parallaxValue = scrollProgress * 220;
                 
-                // Hele teams sectie beweegt langzamer
-                teamsSection.style.transform = `translateY(${parallaxValue * 0.4}px) translateZ(0)`;
+                teamsInner.style.transform = `translateY(${parallaxValue * 0.4}px) translateZ(0)`;
+            } else {
+                teamsInner.style.transform = 'translateY(0) translateZ(0)';
             }
         }
         
-        // Board section - hele blok beweegt sneller
+        // Board section - parallax op inner container
         const boardSection = document.querySelector('.board-section');
-        if (boardSection) {
+        const boardInner = boardSection ? boardSection.querySelector('.container') : null;
+        if (boardSection && boardInner) {
             const boardRect = boardSection.getBoundingClientRect();
             const boardTop = boardRect.top + scrollY;
             const boardHeight = boardSection.offsetHeight;
@@ -357,14 +445,16 @@ function updateLanguage(lang) {
                 const scrollProgress = (scrollY - boardTop + windowHeight) / (boardHeight + windowHeight);
                 const parallaxValue = scrollProgress * 190;
                 
-                // Hele board sectie beweegt sneller
-                boardSection.style.transform = `translateY(${parallaxValue * -0.45}px) translateZ(0)`;
+                boardInner.style.transform = `translateY(${parallaxValue * -0.45}px) translateZ(0)`;
+            } else {
+                boardInner.style.transform = 'translateY(0) translateZ(0)';
             }
         }
         
-        // Sponsors section - hele blok beweegt sneller
+        // Sponsors section - parallax op inner container
         const sponsorsSection = document.querySelector('.sponsors');
-        if (sponsorsSection) {
+        const sponsorsInner = sponsorsSection ? sponsorsSection.querySelector('.container') : null;
+        if (sponsorsSection && sponsorsInner) {
             const sponsorsRect = sponsorsSection.getBoundingClientRect();
             const sponsorsTop = sponsorsRect.top + scrollY;
             const sponsorsHeight = sponsorsSection.offsetHeight;
@@ -373,8 +463,9 @@ function updateLanguage(lang) {
                 const scrollProgress = (scrollY - sponsorsTop + windowHeight) / (sponsorsHeight + windowHeight);
                 const parallaxValue = scrollProgress * 170;
                 
-                // Hele sponsors sectie beweegt sneller
-                sponsorsSection.style.transform = `translateY(${parallaxValue * -0.35}px) translateZ(0)`;
+                sponsorsInner.style.transform = `translateY(${parallaxValue * -0.35}px) translateZ(0)`;
+            } else {
+                sponsorsInner.style.transform = 'translateY(0) translateZ(0)';
             }
         }
         
@@ -398,146 +489,11 @@ function updateLanguage(lang) {
 
 // Theme toggle functionaliteit
 (function initThemeToggle() {
-    const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
     
-    // Laad opgeslagen thema of gebruik standaard
-    const savedTheme = localStorage.getItem('theme') || 'default';
-    if (savedTheme === 'pastel') {
-        html.setAttribute('data-theme', 'pastel');
-    }
-    
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            
-            if (currentTheme === 'pastel') {
-                html.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'default');
-            } else {
-                html.setAttribute('data-theme', 'pastel');
-                localStorage.setItem('theme', 'pastel');
-            }
-        });
-    }
-})();
-
-// Interactieve tafeltennisbal animatie met fysica
-(function initBallAnimation() {
-    const ball = document.getElementById("ball");
-    const sound = document.getElementById("hit-sound");
-
-    if (!ball) return;
-
-    // Bal wordt gepositioneerd via CSS (80% van container, 50% hoogte)
-    // We gebruiken getBoundingClientRect voor collision detection
-    function getBallPosition() {
-        const rect = ball.getBoundingClientRect();
-        return {
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2
-        };
-    }
-    
-    // Initialiseer bal positie variabelen
-    const initialPos = getBallPosition();
-    ballX = initialPos.x;
-    ballY = initialPos.y;
-    
-    let velocityX = 0;
-    let velocityY = 0;
-    let gravity = 0.5;
-    let bounce = 0.6;
-    let isHit = false;
-    let lastMouse = { x: 0, y: 0 };
-
-    function updateBall() {
-        if (isHit) {
-            // Zwaartekracht toepassen
-            velocityY += gravity;
-            
-            // Positie updaten
-            ballX += velocityX;
-            ballY += velocityY;
-        }
-
-        // Stuiteren onderaan
-        if (ballY + 10 > window.innerHeight) {
-            ballY = window.innerHeight - 10;
-            velocityY *= -bounce;
-        }
-
-        // Demp X ook langzaam
-        velocityX *= 0.98;
-
-        // Stuiteren aan de zijkanten
-        if (ballX - 10 < 0 || ballX + 10 > window.innerWidth) {
-            velocityX *= -bounce;
-            ballX = Math.max(10, Math.min(window.innerWidth - 10, ballX));
-        }
-
-        // Update positie met fixed positioning
-        ball.style.position = 'fixed';
-        ball.style.left = `${ballX}px`;
-        ball.style.top = `${ballY}px`;
-        ball.style.transform = 'translate(-50%, -50%)';
-
-        requestAnimationFrame(updateBall);
-    }
-
-    document.addEventListener("mousemove", (e) => {
-        const mouseBox = {
-            left: e.clientX - 10,
-            right: e.clientX + 10,
-            top: e.clientY - 10,
-            bottom: e.clientY + 10
-        };
-
-        const ballBox = ball.getBoundingClientRect();
-
-        const collision = mouseBox.left < ballBox.right &&
-                         mouseBox.right > ballBox.left &&
-                         mouseBox.top < ballBox.bottom &&
-                         mouseBox.bottom > ballBox.top;
-
-        if (collision && !isHit) {
-            // Slag richting berekenen
-            velocityX = (e.clientX - lastMouse.x) * 0.5;
-            velocityY = (e.clientY - lastMouse.y) * 0.5;
-            isHit = true;
-
-            // Geluid afspelen
-            if (sound) {
-                sound.currentTime = 0;
-                sound.play().catch(() => {}); // Ignore errors if sound fails
-            }
-        }
-
-        lastMouse.x = e.clientX;
-        lastMouse.y = e.clientY;
-    });
-
-    // Reset bal na een tijdje
-    setInterval(() => {
-        if (isHit && Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1 && ballY > window.innerHeight - 15) {
-            isHit = false;
-            // Reset naar start positie (rechts in hero)
-            const hero = document.querySelector('.hero');
-            if (hero) {
-                const heroRect = hero.getBoundingClientRect();
-                ballX = heroRect.left + heroRect.width * 0.8;
-                ballY = heroRect.top + heroRect.height * 0.5;
-            } else {
-                ballX = window.innerWidth * 0.8;
-                ballY = window.innerHeight * 0.4;
-            }
-            
-            velocityX = 0;
-            velocityY = 0;
-        }
-    }, 1000);
-
-    updateBall();
+    // Pastel thema altijd actief
+    html.setAttribute('data-theme', 'pastel');
+    localStorage.setItem('theme', 'pastel');
 })();
 
 // Video autoplay fix

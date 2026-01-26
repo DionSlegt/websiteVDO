@@ -53,7 +53,7 @@ async function loadHomeContent() {
                     })
                     .join('');
                 aboutContent.innerHTML = html;
-                
+
                 // Update language after content is loaded
                 const currentLang = document.documentElement.getAttribute('lang') || 'nl';
                 if (typeof updateLanguage === 'function') {

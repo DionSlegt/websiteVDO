@@ -185,7 +185,7 @@ body {
 
 /* Header & Navigation */
 header {
-    background: transparent;
+    background: #000000;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     box-shadow: none;
@@ -294,8 +294,8 @@ header {
 }
 
 .language-switch {
-    background: var(--bg-section);
-    border: 1px solid var(--border-color);
+    background: transparent;
+    border: 1px solid #FFDAB9;
     border-radius: 8px;
     padding: 0.5rem 1rem;
     cursor: pointer;
@@ -305,17 +305,17 @@ header {
     transition: all 0.2s ease;
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--text-color);
+    color: #FFDAB9;
     min-width: 50px;
-    box-shadow: var(--shadow);
+    box-shadow: none;
 }
 
 .language-switch:hover {
-    border-color: var(--primary-color);
+    border-color: #FFDAB9;
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    background: var(--primary-color);
-    color: var(--white);
+    box-shadow: none;
+    background: transparent;
+    color: #FFDAB9;
 }
 
 .language-text {
@@ -331,9 +331,18 @@ header {
     letter-spacing: -0.02em;
 }
 
+.logo-img {
+    height: 70px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+}
+
 .logo-link {
     text-decoration: none;
     color: inherit;
+    display: flex;
+    align-items: center;
 }
 
 .section-divider {
@@ -357,7 +366,7 @@ header {
 
 .nav-menu a {
     text-decoration: none;
-    color: var(--text-color);
+    color: #FFDAB9;
     font-weight: 500;
     font-size: 0.95rem;
     transition: color 0.2s ease;
@@ -406,8 +415,8 @@ header {
 .hero {
     background: var(--bg-dark);
     color: var(--text-color);
-    height: calc(100vh - var(--nav-h));
-    padding-top: var(--nav-h);
+    min-height: calc(100vh - var(--nav-h));
+    padding-top: 0;
     padding-bottom: 0;
     padding-left: 20px;
     padding-right: 20px;
@@ -418,6 +427,8 @@ header {
     overflow: hidden;
     will-change: transform;
     transform: translateZ(0);
+    z-index: 1;
+    margin-bottom: -1px;
 }
 
 /* Hero parallax wordt nu via JavaScript geregeld */
@@ -445,6 +456,7 @@ header {
     will-change: transform;
     position: relative;
     z-index: 1;
+    align-items: flex-start;
 }
 
 .hero-right {
@@ -552,7 +564,7 @@ header {
 }
 
 /* Normaliseer section padding */
-section:not(.location):not(.contact) {
+section:not(.location):not(.contact):not(.locatie-scroll) {
     padding: 40px 20px;
 }
 
@@ -610,7 +622,13 @@ section:not(.location):not(.contact) {
     background: var(--bg-section);
     will-change: transform;
     transform: translateZ(0);
-    transition: transform 0.1s ease-out;
+    transition: transform 0.1s ease-out, padding 0.1s ease-out;
+    position: relative;
+    z-index: 2;
+    margin-bottom: -1px;
+    padding-top: 120px;
+    padding-bottom: 120px;
+    overflow: hidden;
 }
 
 .about h2 {
@@ -635,14 +653,16 @@ section:not(.location):not(.contact) {
     max-width: 1000px;
     margin: 0 auto;
     text-align: center;
+    will-change: transform;
 }
 
 .about-content p {
     font-size: 1.4rem;
-    color: var(--text-light);
+    color: #1D1D1D;
     margin-bottom: 1rem;
     line-height: 1.5;
     font-weight: 400;
+    text-align: center;
 }
 
 /* Honorary Members Section */
@@ -653,6 +673,19 @@ section:not(.location):not(.contact) {
     transition: transform 0.1s ease-out;
 }
 
+.honorary-section .container {
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    column-gap: 3rem;
+    row-gap: 2rem;
+    align-items: start;
+    max-width: 1200px;
+    padding-left: 80px;
+    padding-right: 0;
+}
+
 .honorary-section h2 {
     font-size: 3rem;
     margin-bottom: 3rem;
@@ -661,12 +694,14 @@ section:not(.location):not(.contact) {
     color: var(--text-color);
     font-weight: 700;
     letter-spacing: -0.02em;
+    grid-column: 1 / 2;
 }
 
 .honorary-intro {
-    max-width: 1000px;
-    margin: 0 auto 4rem;
+    max-width: none;
+    margin: 0;
     text-align: center;
+    grid-column: 1 / 2;
 }
 
 .honorary-intro p {
@@ -681,8 +716,11 @@ section:not(.location):not(.contact) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    max-width: 900px;
-    margin: 0 auto;
+    max-width: 700px;
+    margin: 0 0 0 auto;
+    justify-content: start;
+    justify-items: end;
+    grid-column: 2 / 3;
 }
 
 .honorary-table-wrapper {
@@ -753,6 +791,17 @@ section:not(.location):not(.contact) {
 
 /* Responsive voor honorary members */
 @media (max-width: 768px) {
+    .honorary-section .container {
+        grid-template-columns: 1fr;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .honorary-intro,
+    .honorary-tables-grid {
+        grid-column: 1 / -1;
+    }
+
     .honorary-tables-grid {
         grid-template-columns: 1fr;
     }
@@ -902,6 +951,9 @@ section:not(.location):not(.contact) {
     will-change: transform;
     transform: translateZ(0);
     transition: transform 0.1s ease-out;
+    position: relative;
+    z-index: 3;
+    margin-bottom: -1px;
 }
 
 #image-carousel {
@@ -922,6 +974,7 @@ section:not(.location):not(.contact) {
     border-radius: 30px;
     display: block;
     transition: opacity 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 /* Foto's die niet in het midden staan hebben 75% opacity en blur */
@@ -934,6 +987,87 @@ section:not(.location):not(.contact) {
 .splide__slide.is-active img {
     opacity: 1;
     filter: blur(0);
+}
+
+/* Gallery lightbox */
+.gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 9999;
+}
+
+.gallery-lightbox.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.gallery-lightbox img {
+    max-width: 92vw;
+    max-height: 92vh;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.gallery-lightbox-prev,
+.gallery-lightbox-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid #FFDAB9;
+    background: transparent;
+    color: #FFDAB9;
+    font-size: 36px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-lightbox-prev {
+    left: 200px;
+}
+
+.gallery-lightbox-next {
+    right: 200px;
+}
+
+.gallery-lightbox-prev:hover,
+.gallery-lightbox-next:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+
+.gallery-lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #FFDAB9;
+    background: transparent;
+    color: #FFDAB9;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-lightbox-close:hover {
+    transform: translateY(-1px);
 }
 
 /* Splide arrow styling - horizontaal in het midden, met donkere achtergrond */
@@ -1167,6 +1301,9 @@ section:not(.location):not(.contact) {
 .locatie-scroll {
     height: 200vh; /* bepaalt scroll-lengte van de fade */
     position: relative;
+    z-index: 4;
+    margin-bottom: -1px;
+    padding: 0;
 }
 
 .locatie-pin {
@@ -1351,6 +1488,7 @@ section:not(.location):not(.contact) {
     align-items: center;
     gap: 1.5rem;
     width: 100%;
+    padding-top: 8px;
 }
 
 /* Centreren van paragraaf in lid-worden sectie */
@@ -1412,23 +1550,23 @@ section:not(.location):not(.contact) {
 }
 
 .location-address {
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: 800;
     color: #ffffff !important;
     margin: 0;
     letter-spacing: -0.02em;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    line-height: 0.95;
+    line-height: 1.1;
     text-align: center;
 }
 
 .location-details {
-    font-size: 2rem;
+    font-size: 2.4rem;
     color: #ffffff !important;
     margin: 0;
     font-weight: 800;
     opacity: 1;
-    line-height: 0.95;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     text-align: center;
@@ -2324,7 +2462,7 @@ footer {
     }
     
     /* General improvements */
-    section {
+    section:not(.locatie-scroll) {
         padding: 30px 15px;
     }
     
@@ -2384,7 +2522,7 @@ footer {
         object-fit: contain;
     }
     
-    section {
+    section:not(.locatie-scroll) {
         padding: 30px 15px;
     }
     
@@ -2447,6 +2585,10 @@ footer {
     
     .logo h1 {
         font-size: 1.25rem;
+    }
+    
+    .logo-img {
+        height: 52px;
     }
     
     .nav-menu {
@@ -2775,24 +2917,17 @@ footer {
 
 /* Soft 3D effecten voor pastel thema */
 [data-theme="pastel"] .location-card {
-    background: linear-gradient(135deg, #FFFFFF 0%, #FFFACD 50%, #FFDAB9 100%);
-    box-shadow: 
-        0 12px 24px -8px rgba(135, 206, 235, 0.25),
-        0 6px 12px -4px rgba(240, 128, 128, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        0 0 0 1px rgba(230, 230, 250, 0.4);
-    border: 1px solid rgba(135, 206, 235, 0.5);
-    transform: perspective(1000px) translateZ(0);
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    transform: none;
+    padding: 0;
 }
 
 [data-theme="pastel"] .location-card:hover {
-    transform: perspective(1000px) translateY(-8px) translateZ(20px) rotateX(2deg);
-    box-shadow: 
-        0 20px 40px -12px rgba(135, 206, 235, 0.35),
-        0 10px 20px -6px rgba(230, 230, 250, 0.3),
-        0 0 0 1px rgba(230, 230, 250, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    border-color: rgba(135, 206, 235, 0.7);
+    transform: none;
+    box-shadow: none;
+    border-color: transparent;
 }
 
 [data-theme="pastel"] .team-card {
@@ -2836,6 +2971,27 @@ footer {
     background: linear-gradient(135deg, #87CEEB 0%, #E6E6FA 100%);
 }
 
+[data-theme="pastel"] .location-button {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFFACD 50%, #FFDAB9 100%);
+    box-shadow: 
+        0 12px 24px -8px rgba(135, 206, 235, 0.25),
+        0 6px 12px -4px rgba(240, 128, 128, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 0 0 1px rgba(230, 230, 250, 0.4);
+    border: 1px solid rgba(135, 206, 235, 0.5);
+    color: #2D3748;
+}
+
+[data-theme="pastel"] .location-button:hover {
+    transform: perspective(1000px) translateY(-4px) translateZ(15px);
+    box-shadow: 
+        0 20px 40px -12px rgba(135, 206, 235, 0.35),
+        0 10px 20px -6px rgba(230, 230, 250, 0.3),
+        0 0 0 1px rgba(230, 230, 250, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFFACD 50%, #FFDAB9 100%);
+}
+
 [data-theme="pastel"] body {
     background: linear-gradient(180deg, #FFE8C0 0%, #EACFA1 100%);
     background-attachment: fixed;
@@ -2855,6 +3011,10 @@ footer {
 
 [data-theme="pastel"] .about {
     background: #E8C99A;
+}
+
+[data-theme="pastel"] .about-content p {
+    color: #1D1D1D !important;
 }
 
 [data-theme="pastel"] .location-bg {
@@ -2892,12 +3052,14 @@ footer {
     border-color: rgba(135, 206, 235, 0.7);
 }
 
+[data-theme="pastel"] header {
+    background: #000000;
+}
+
 [data-theme="pastel"] .navbar {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 205, 0.95) 100%);
-    backdrop-filter: blur(10px);
-    box-shadow: 
-        0 4px 12px -2px rgba(135, 206, 235, 0.2),
-        0 0 0 1px rgba(230, 230, 250, 0.3);
+    background: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
 }
 
 [data-theme="pastel"] .theme-switch {
@@ -2938,32 +3100,3 @@ footer {
     color: #1D1D1D !important;
 }
 
-/* Interactieve tafeltennisbal */
-.hero-content .ball-container {
-    position: absolute;
-    right: 10%;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    z-index: 5;
-}
-
-@media (max-width: 768px) {
-    .hero-content .ball-container {
-        right: 5%;
-    }
-}
-
-#ball {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    border-radius: 50%;
-    box-shadow: 0 0 10px white;
-    pointer-events: none;
-    z-index: 10;
-    left: 80%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
