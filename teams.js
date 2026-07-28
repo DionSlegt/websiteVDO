@@ -290,136 +290,16 @@ let modalTeamPoule;
 let standingsBody;
 let closeBtn;
 
-// Handle team card click
-function handleTeamCardClick(e, card) {
-    e.stopPropagation();
-    e.preventDefault();
-    
-    const teamName = card.getAttribute('data-team');
-    const teamClass = card.getAttribute('data-class');
-    const teamPoule = card.getAttribute('data-poule');
-    
-    console.log('Team card clicked!', { teamName, teamClass, teamPoule });
-    
-    if (modal && modalTeamName && modalTeamClass && modalTeamPoule && standingsBody) {
-        console.log('Opening modal...');
-        openModal(teamName, teamClass, teamPoule);
-    } else {
-        console.error('Modal elements not found:', {
-            modal: !!modal,
-            modalTeamName: !!modalTeamName,
-            modalTeamClass: !!modalTeamClass,
-            modalTeamPoule: !!modalTeamPoule,
-            standingsBody: !!standingsBody
-        });
-    }
-}
+// Handle team card click – standen-modal is verwijderd, geen actie
+function handleTeamCardClick(e, card) {}
 
-// Function to initialize modal functionality
+// Standen-modal is verwijderd – geen modal-functionaliteit meer
 function initModal() {
-    // Initialize modal elements
-    modal = document.getElementById('team-modal');
-    modalTeamName = document.getElementById('modal-team-name');
-    modalTeamClass = document.getElementById('modal-team-class');
-    modalTeamPoule = document.getElementById('modal-team-poule');
-    standingsBody = document.getElementById('standings-body');
-    closeBtn = document.querySelector('.modal-close');
-
-    console.log('Initializing modal...', {
-        modal: !!modal,
-        modalTeamName: !!modalTeamName,
-        modalTeamClass: !!modalTeamClass,
-        modalTeamPoule: !!modalTeamPoule,
-        standingsBody: !!standingsBody
-    });
-    
-    // Use event delegation for "Bekijk Standen" buttons (works even if buttons are added later)
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.view-standings-btn');
-        if (btn) {
-            e.stopPropagation();
-            e.preventDefault();
-            
-            const teamName = btn.getAttribute('data-team');
-            const teamClass = btn.getAttribute('data-class');
-            const teamPoule = btn.getAttribute('data-poule');
-            
-            console.log('View standings button clicked!', { teamName, teamClass, teamPoule });
-            
-            if (modal && modalTeamName && modalTeamClass && modalTeamPoule && standingsBody) {
-                console.log('Opening modal...');
-                openModal(teamName, teamClass, teamPoule);
-            } else {
-                console.error('Modal elements not found', {
-                    modal: !!modal,
-                    modalTeamName: !!modalTeamName,
-                    modalTeamClass: !!modalTeamClass,
-                    modalTeamPoule: !!modalTeamPoule,
-                    standingsBody: !!standingsBody
-                });
-            }
-        }
-    });
-    
-    // Also add direct listeners as backup
-    const viewStandingsButtons = document.querySelectorAll('.view-standings-btn');
-    console.log('Found view standings buttons:', viewStandingsButtons.length);
-    
-    viewStandingsButtons.forEach((btn, index) => {
-        const teamName = btn.getAttribute('data-team');
-        console.log(`Button ${index + 1}:`, teamName);
-    });
-    
-    // Also keep card click functionality as fallback
-    const teamCards = document.querySelectorAll('.team-card');
-    console.log('Found team cards:', teamCards.length);
-    
-    teamCards.forEach((card, index) => {
-        const teamName = card.getAttribute('data-team');
-        console.log(`Adding click listener to card ${index + 1}:`, teamName);
-        
-        // Add click listener to the card itself - use capture phase
-        card.addEventListener('click', function(e) {
-            // Only handle if not clicking on the button
-            if (!e.target.closest('.view-standings-btn')) {
-                console.log('Click detected on card:', teamName);
-                handleTeamCardClick(e, this);
-            }
-        }, true); // Capture phase - catches clicks before they bubble
-    });
-    
-    // Close modal when close button is clicked
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            closeModal();
-        });
-    }
-    
-    // Close modal when clicking outside of it (on the backdrop)
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            // Only close if clicking directly on the modal backdrop, not on modal-content
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-        
-        // Prevent modal-content clicks from closing the modal
-        const modalContent = modal.querySelector('.modal-content');
-        if (modalContent) {
-            modalContent.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-    }
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
+    modal = null;
+    modalTeamName = null;
+    modalTeamClass = null;
+    modalTeamPoule = null;
+    standingsBody = null;
 }
 
 // Initialize when DOM is ready

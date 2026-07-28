@@ -6,9 +6,18 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="VDO - Sponsors" name="description"/>
 <title>VDO - Sponsors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link href="styles.css" rel="stylesheet"/>
 </head>
-<body><header>
+<body>
+<div class="site-background">
+    <img src="artwork/bg.png" alt="" />
+</div>
+
+<div class="site-content">
+<header>
 <nav class="navbar">
 <div class="container">
 <div class="logo">
@@ -34,7 +43,7 @@
 </header>
 
 <main>
-<section class="hero" style="min-height: 15vh; padding: 40px 20px;">
+<section class="hero hero-fullscreen">
 <div class="hero-content">
 <div class="hero-left">
 <h1 class="hero-title" data-en="Sponsors" data-nl="Sponsors">Sponsors</h1>
@@ -48,39 +57,40 @@
 </div>
 </div>
 </section>
-<section class="sponsors">
-<div class="container">
-<h2 data-en="Sponsors" data-nl="Sponsors">Sponsors</h2>
-<div class="sponsors-grid">
-<div class="sponsor-item">
+<section class="sponsors-carousel-section">
+<div class="sponsors-carousel-sticky">
+<div class="sponsors-carousel-stage">
+<div class="carousel-ring">
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image001.jpg"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image003.jpg"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image004.jpg"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image005.jpg"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image006.jpg"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image007.jpg"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image009.jpg"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image010.gif"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image011.gif"/>
-</div>
-<div class="sponsor-item">
+</article>
+<article class="sponsor-card">
 <img alt="Sponsor" loading="lazy" src="Sponsors/image012.gif"/>
+</article>
 </div>
 </div>
 </div>
@@ -109,5 +119,13 @@
 </div>
 <p class="footer-copyright" data-en="© 2025 VDO. All rights reserved." data-nl="© 2025 VDO. Alle rechten voorbehouden.">© 2025 VDO. Alle rechten voorbehouden.</p>
 </div>
-</footer><script src="script.js"></script><script src="cms-loader.js"></script></body>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+<script src="parallax.js"></script>
+<script src="cms-loader.js"></script>
+<script src="sponsors-carousel.js"></script>
+</div>
+</body>
 </html>

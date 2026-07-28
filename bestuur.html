@@ -6,9 +6,18 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="VDO - Bestuur" name="description"/>
 <title>VDO - Bestuur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link href="styles.css" rel="stylesheet"/>
 </head>
-<body><header>
+<body>
+<div class="site-background">
+    <img src="artwork/bg.png" alt="" />
+</div>
+
+<div class="site-content">
+<header>
 <nav class="navbar">
 <div class="container">
 <div class="logo">
@@ -34,7 +43,7 @@
 </header>
 
 <main>
-<section class="hero" style="min-height: 15vh; padding: 40px 20px;">
+<section class="hero hero-fullscreen">
 <div class="hero-content">
 <div class="hero-left">
 <h1 class="hero-title" data-en="Board" data-nl="Bestuur">Bestuur</h1>
@@ -57,20 +66,12 @@
 </div>
 <div class="member-info">
 <h2 class="member-name-large">Richard Vos</h2>
-<p class="member-role-large" data-en="Chairman&lt;br&gt;Youth Competition Secretary and Technical Coordinator" data-nl="Voorzitter&lt;br&gt;Wedstrijdsecretaris Jeugd en Technisch Coördinator">Voorzitter<br/>Wedstrijdsecretaris Jeugd en Technisch Coördinator</p>
-<div class="member-description">
-<p data-en="Information about why Richard became chairman and what his background is will appear here." data-nl="Hier komt informatie over waarom Richard voorzitter is geworden en wat zijn achtergrond is.">Hier komt informatie over waarom Richard voorzitter is geworden en wat zijn achtergrond is.</p>
-</div>
 </div>
 </div>
 <!-- Astrid Kas - Tekst links, foto rechts -->
 <div class="board-member-alternate fade-in">
 <div class="member-info">
 <h2 class="member-name-large">Astrid Kas</h2>
-<p class="member-role-large" data-en="Secretary&lt;br&gt;Treasurer&lt;br&gt;Senior Competition Secretary" data-nl="Secretaris&lt;br&gt;Penningmeester&lt;br&gt;Wedstrijdsecretaris Senioren">Secretaris<br/>Penningmeester<br/>Wedstrijdsecretaris Senioren</p>
-<div class="member-description">
-<p data-en="Information about Astrid and her role on the board will appear here." data-nl="Hier komt informatie over Astrid en haar rol binnen het bestuur.">Hier komt informatie over Astrid en haar rol binnen het bestuur.</p>
-</div>
 </div>
 <div class="member-photo-medium">
 <img alt="Astrid Kas" src="images/member-photo.png"/>
@@ -83,20 +84,12 @@
 </div>
 <div class="member-info">
 <h2 class="member-name-large">Lars Hoogland</h2>
-<p class="member-role-large" data-en="Senior Competition Secretary" data-nl="Wedstrijdsecretaris Senioren">Wedstrijdsecretaris Senioren</p>
-<div class="member-description">
-<p data-en="Information about Lars and his contribution to the board will appear here." data-nl="Hier komt informatie over Lars en zijn bijdrage aan het bestuur.">Hier komt informatie over Lars en zijn bijdrage aan het bestuur.</p>
-</div>
 </div>
 </div>
 <!-- Jan van der Wal - Tekst links, foto rechts -->
 <div class="board-member-alternate fade-in">
 <div class="member-info">
 <h2 class="member-name-large">Jan van der Wal</h2>
-<p class="member-role-large" data-en="Sponsorship and&lt;br&gt;Friends of VDO" data-nl="Sponsering en&lt;br&gt;Vrienden van VDO">Sponsering en<br/>Vrienden van VDO</p>
-<div class="member-description">
-<p data-en="Information about Jan and his work for sponsorship and friends of VDO will appear here." data-nl="Hier komt informatie over Jan en zijn werk voor sponsoring en vrienden van VDO.">Hier komt informatie over Jan en zijn werk voor sponsoring en vrienden van VDO.</p>
-</div>
 </div>
 <div class="member-photo-medium">
 <img alt="Jan van der Wal" src="images/member-photo.png"/>
@@ -128,5 +121,12 @@
 </div>
 <p class="footer-copyright" data-en="© 2025 VDO. All rights reserved." data-nl="© 2025 VDO. Alle rechten voorbehouden.">© 2025 VDO. Alle rechten voorbehouden.</p>
 </div>
-</footer><script src="script.js"></script><script src="cms-loader.js"></script></body>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+<script src="parallax.js"></script>
+<script src="cms-loader.js"></script>
+</div>
+</body>
 </html>

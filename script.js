@@ -1,4 +1,3 @@
-// Gallery carousel met Splide.js
 function initGalleryCarousel() {
     const carousel = document.querySelector('#image-carousel');
     if (!carousel) return;
@@ -117,10 +116,164 @@ function initGalleryLightbox() {
     });
 }
 
+// About section carousel functionaliteit
+function initAboutCarousel() {
+    const prevBtn = document.querySelector('.about-images .carousel-btn.prev');
+    const nextBtn = document.querySelector('.about-images .carousel-btn.next');
+    const images = document.querySelectorAll('.about-images .carousel-image');
+    
+    if (!prevBtn || !nextBtn || images.length === 0) return;
+    
+    let currentIndex = 0;
+    
+    function showImage(index) {
+        // Verberg alle afbeeldingen
+        images.forEach(img => img.classList.remove('active'));
+        
+        // Toon de huidige afbeelding
+        images[index].classList.add('active');
+        currentIndex = index;
+    }
+    
+    function nextImage() {
+        const newIndex = (currentIndex + 1) % images.length;
+        showImage(newIndex);
+    }
+    
+    function prevImage() {
+        const newIndex = (currentIndex - 1 + images.length) % images.length;
+        showImage(newIndex);
+    }
+    
+    // Event listeners voor de knoppen
+    nextBtn.addEventListener('click', nextImage);
+    prevBtn.addEventListener('click', prevImage);
+    
+    // Keyboard navigatie voor carousel
+    document.addEventListener('keydown', (e) => {
+        // Alleen actief als we in de about sectie zijn EN lightbox is niet open
+        const lightbox = document.getElementById('lightbox');
+        if (lightbox && lightbox.classList.contains('active')) return;
+        
+        const aboutSection = document.querySelector('.about');
+        if (!aboutSection) return;
+        
+        const rect = aboutSection.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom >= 0;
+        
+        if (inView) {
+            if (e.key === 'ArrowLeft') {
+                prevImage();
+            } else if (e.key === 'ArrowRight') {
+                nextImage();
+            }
+        }
+    });
+    
+    // Automatische slideshow (optioneel, uitgeschakeld)
+    // setInterval(nextImage, 5000);
+}
+
+// Lightbox functionaliteit voor about carousel
+function initAboutLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.querySelector('.lightbox-image');
+    const closeBtn = document.querySelector('.lightbox-close');
+    const prevBtn = document.querySelector('.lightbox-prev');
+    const nextBtn = document.querySelector('.lightbox-next');
+    const carouselImages = document.querySelectorAll('.about-images .carousel-image');
+    
+    if (!lightbox || !lightboxImg || carouselImages.length === 0) return;
+    
+    let currentLightboxIndex = 0;
+    
+    // Open lightbox met een specifieke afbeelding
+    function openLightbox(index) {
+        currentLightboxIndex = index;
+        const img = carouselImages[index];
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Sluit lightbox
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+        lightboxImg.src = '';
+    }
+    
+    // Navigeer naar volgende afbeelding
+    function showNextImage() {
+        currentLightboxIndex = (currentLightboxIndex + 1) % carouselImages.length;
+        const img = carouselImages[currentLightboxIndex];
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+    }
+    
+    // Navigeer naar vorige afbeelding
+    function showPrevImage() {
+        currentLightboxIndex = (currentLightboxIndex - 1 + carouselImages.length) % carouselImages.length;
+        const img = carouselImages[currentLightboxIndex];
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+    }
+    
+    // Klik op carousel afbeelding opent lightbox
+    carouselImages.forEach((img, index) => {
+        img.addEventListener('click', () => {
+            openLightbox(index);
+        });
+    });
+    
+    // Sluit knop
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeLightbox);
+    }
+    
+    // Navigatie knoppen
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showPrevImage();
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showNextImage();
+        });
+    }
+    
+    // Klik buiten afbeelding sluit lightbox
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+    
+    // Keyboard navigatie
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
+            closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+            showPrevImage();
+        } else if (e.key === 'ArrowRight') {
+            showNextImage();
+        }
+    });
+}
+
 // Initialiseer de gallery carousel wanneer de pagina geladen is
 document.addEventListener('DOMContentLoaded', () => {
     initGalleryCarousel();
     initGalleryLightbox();
+    initAboutCarousel();
+    initAboutLightbox();
 });
 
 const hamburger = document.querySelector('.hamburger');
@@ -382,111 +535,6 @@ function updateLanguage(lang) {
     }
 }
 
-// Parallax effect per blok/sectie op alle pagina's
-(function initParallax() {
-    let ticking = false;
-    
-    function updateParallax() {
-        const scrollY = window.pageYOffset || window.scrollY;
-        const windowHeight = window.innerHeight;
-        
-        // Hero section - parallax op inner content (geen bleed-through)
-        const hero = document.querySelector('.hero');
-        const heroContent = hero ? hero.querySelector('.hero-content') : null;
-        if (hero && heroContent) {
-            const heroRect = hero.getBoundingClientRect();
-            const heroTop = heroRect.top + scrollY;
-            const heroHeight = hero.offsetHeight;
-            
-            if (scrollY >= heroTop - windowHeight && scrollY <= heroTop + heroHeight) {
-                const scrollProgress = (scrollY - heroTop + windowHeight) / (heroHeight + windowHeight);
-                const parallaxValue = scrollProgress * 300;
-                
-                // Alleen inner content beweegt
-                heroContent.style.transform = `translateY(${parallaxValue * 0.6}px) translateZ(0)`;
-            } else {
-                heroContent.style.transform = 'translateY(0) translateZ(0)';
-            }
-        }
-        
-        // About section parallax UIT: content is layout-based (geen bleed-through)
-        
-        // Location section parallax UITGEZET - voorkomt bleed-through in fullscreen sectie
-        
-        // Contact section parallax UITGEZET - voorkomt conflicten met crossfade overlay
-        
-        // Teams section - parallax op inner container
-        const teamsSection = document.querySelector('.teams-section');
-        const teamsInner = teamsSection ? teamsSection.querySelector('.container') : null;
-        if (teamsSection && teamsInner) {
-            const teamsRect = teamsSection.getBoundingClientRect();
-            const teamsTop = teamsRect.top + scrollY;
-            const teamsHeight = teamsSection.offsetHeight;
-            
-            if (scrollY >= teamsTop - windowHeight && scrollY <= teamsTop + teamsHeight) {
-                const scrollProgress = (scrollY - teamsTop + windowHeight) / (teamsHeight + windowHeight);
-                const parallaxValue = scrollProgress * 220;
-                
-                teamsInner.style.transform = `translateY(${parallaxValue * 0.4}px) translateZ(0)`;
-            } else {
-                teamsInner.style.transform = 'translateY(0) translateZ(0)';
-            }
-        }
-        
-        // Board section - parallax op inner container
-        const boardSection = document.querySelector('.board-section');
-        const boardInner = boardSection ? boardSection.querySelector('.container') : null;
-        if (boardSection && boardInner) {
-            const boardRect = boardSection.getBoundingClientRect();
-            const boardTop = boardRect.top + scrollY;
-            const boardHeight = boardSection.offsetHeight;
-            
-            if (scrollY >= boardTop - windowHeight && scrollY <= boardTop + boardHeight) {
-                const scrollProgress = (scrollY - boardTop + windowHeight) / (boardHeight + windowHeight);
-                const parallaxValue = scrollProgress * 190;
-                
-                boardInner.style.transform = `translateY(${parallaxValue * -0.45}px) translateZ(0)`;
-            } else {
-                boardInner.style.transform = 'translateY(0) translateZ(0)';
-            }
-        }
-        
-        // Sponsors section - parallax op inner container
-        const sponsorsSection = document.querySelector('.sponsors');
-        const sponsorsInner = sponsorsSection ? sponsorsSection.querySelector('.container') : null;
-        if (sponsorsSection && sponsorsInner) {
-            const sponsorsRect = sponsorsSection.getBoundingClientRect();
-            const sponsorsTop = sponsorsRect.top + scrollY;
-            const sponsorsHeight = sponsorsSection.offsetHeight;
-            
-            if (scrollY >= sponsorsTop - windowHeight && scrollY <= sponsorsTop + sponsorsHeight) {
-                const scrollProgress = (scrollY - sponsorsTop + windowHeight) / (sponsorsHeight + windowHeight);
-                const parallaxValue = scrollProgress * 170;
-                
-                sponsorsInner.style.transform = `translateY(${parallaxValue * -0.35}px) translateZ(0)`;
-            } else {
-                sponsorsInner.style.transform = 'translateY(0) translateZ(0)';
-            }
-        }
-        
-        ticking = false;
-    }
-    
-    function onScroll() {
-        if (!ticking) {
-            window.requestAnimationFrame(updateParallax);
-            ticking = true;
-        }
-    }
-    
-    // Initialiseer parallax
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', updateParallax, { passive: true });
-    
-    // Initial call
-    updateParallax();
-})();
-
 // Theme toggle functionaliteit
 (function initThemeToggle() {
     const html = document.documentElement;
@@ -520,175 +568,335 @@ function updateLanguage(lang) {
     }
 })();
 
-// Echte cross-fade (Parsec-stijl) - bidirectionele state-machine
-document.addEventListener('DOMContentLoaded', () => {
-    const scrollSection = document.querySelector('.locatie-scroll');
-    const locatieLayer = document.querySelector('.locatie-layer');
-    const lidLayer = document.querySelector('.lid-worden-layer');
-    const locatiePops = document.querySelectorAll('.locatie-layer .pop');
-    const lidPops = document.querySelectorAll('.lid-worden-layer .pop');
+// Bewegende lichtreflectie op glass paneel - DISABLED (element verwijderd)
+// (function initGlassReflection() {
+//     const card = document.querySelector(".about-text");
+//     
+//     if (card) {
+//         card.addEventListener("pointermove", (event) => {
+//             const rect = card.getBoundingClientRect();
+//             
+//             card.style.setProperty(
+//                 "--mouse-x",
+//                 `${event.clientX - rect.left}px`
+//             );
+//             
+//             card.style.setProperty(
+//                 "--mouse-y",
+//                 `${event.clientY - rect.top}px`
+//             );
+//         });
+//     }
+// })();
+
+// Pingpong bounce animatie voor de O in VDO
+(function initBouncingO() {
+    const bouncingO = document.querySelector(".bouncing-o");
     
-    if (!scrollSection || !locatieLayer || !lidLayer) return;
-    
-    // State machine: 'locatie' of 'lid'
-    let state = 'locatie';
-    let isAnimating = false;
-    let lastScrollY = window.scrollY;
-    let isInitialized = false;
-    
-    // Scroll buffer / dead zone (voorkomt te snelle trigger)
-    const buffer = window.innerHeight * 0.3; // 30% van viewport hoogte (schaalt mee)
-    
-    // Initialiseer state op basis van huidige scroll positie
-    const initializeState = () => {
-        const rect = scrollSection.getBoundingClientRect();
-        const vh = window.innerHeight;
-        const scrollHeight = rect.height;
+    if (bouncingO) {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                // Forceer een herstart van de animatie
+                void bouncingO.offsetWidth;
+                
+                bouncingO.classList.remove("is-bouncing");
+                bouncingO.classList.add("is-bouncing");
+                observer.unobserve(entries[0].target);
+            }
+        }, {
+            threshold: 0.35
+        });
         
-        // Als scrollSection nog niet sticky is (rect.top > 0), altijd 'locatie'
-        if (rect.top > 0) {
-            state = 'locatie';
-            locatiePops.forEach(el => {
-                el.classList.remove('pop-out');
-                el.classList.add('visible');
-            });
-            return;
+        observer.observe(bouncingO);
+    }
+})();
+
+// Openingstijden sectie - 3D Scroll Carrousel
+(function initOpeningstijden() {
+    const openingHours = [
+        { day: "Maandag", short: "MA", open: false },
+        { day: "Dinsdag", short: "DI", open: true, start: "19:30", end: "22:30", activity: "Training" },
+        { day: "Woensdag", short: "WO", open: true, start: "20:00", end: "22:30", activity: "Vrij spelen" },
+        { day: "Donderdag", short: "DO", open: true, start: "19:30", end: "22:30", activity: "Training" },
+        { day: "Vrijdag", short: "VR", open: true, start: "20:00", end: "23:00", activity: "Competitie" },
+        { day: "Zaterdag", short: "ZA", open: false },
+        { day: "Zondag", short: "ZO", open: false }
+    ];
+
+    const section = document.querySelector('.openingstijden-section');
+    const container = document.querySelector('.openingstijden-container');
+    const header = document.getElementById('openingstijden-header');
+
+    if (!container || !header) return;
+
+    // Constants voor 3D carrousel
+    const ROTATION_PER_CARD = 40;
+    const CARD_SPACING = 400;
+    const TOTAL_CARDS = 7;
+
+    // Carrousel state
+    let scrollProgress = 0;
+    let targetProgress = 0;
+    let animationFrame = null;
+
+    // Functie: huidige dag ophalen (0 = maandag, 6 = zondag)
+    function getCurrentDay() {
+        const today = new Date().getDay();
+        return today === 0 ? 6 : today - 1;
+    }
+
+    // Functie: eerstvolgende open dag vinden
+    function getNextOpenDay(currentDay) {
+        for (let i = 1; i <= 7; i++) {
+            const checkDay = (currentDay + i) % 7;
+            if (openingHours[checkDay].open) {
+                return checkDay;
+            }
         }
-        
-        // Nu is sticky actief (rect.top <= 0)
-        const stickyProgress = Math.min(Math.max(-rect.top / (scrollHeight - vh), 0), 1);
-        const triggerPoint = 0.2;
-        const scrollDistance = -rect.top;
-        const maxScrollDistance = scrollHeight - vh;
-        
-        // Bepaal state op basis van scroll positie
-        if (stickyProgress > triggerPoint && scrollDistance > (triggerPoint * maxScrollDistance) + buffer) {
-            state = 'lid';
-            locatieLayer.classList.add('fade-out');
-            lidLayer.classList.add('fade-in');
-            locatiePops.forEach(el => {
-                el.classList.remove('visible');
-                el.classList.add('pop-out');
-            });
-            lidPops.forEach(el => el.classList.add('pop-in'));
+        return null;
+    }
+
+    // Functie: dynamische header tekst genereren
+    function generateHeaderText() {
+        const currentDay = getCurrentDay();
+        const todayData = openingHours[currentDay];
+
+        if (todayData.open) {
+            return `Vandaag open van ${todayData.start} tot ${todayData.end}`;
         } else {
-            state = 'locatie';
-            locatiePops.forEach(el => {
-                el.classList.remove('pop-out');
-                el.classList.add('visible');
-            });
+            const nextDay = getNextOpenDay(currentDay);
+            if (nextDay !== null) {
+                const nextDayData = openingHours[nextDay];
+                return `Eerstvolgende speelavond: ${nextDayData.day.toLowerCase()} om ${nextDayData.start}`;
+            }
+            return "Openingstijden";
         }
-    };
-    
-    // Initialiseer state bij laden (na een korte delay om ervoor te zorgen dat alles geladen is)
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            initializeState();
-            isInitialized = true;
-        });
-    });
-    
-    // Bepaal trigger punt (20% in sticky fase)
-    const getTriggerPoint = () => {
-        const rect = scrollSection.getBoundingClientRect();
-        const vh = window.innerHeight;
-        const scrollHeight = rect.height;
-        return scrollSection.offsetTop + (scrollHeight - vh) * 0.2;
-    };
-    
-    // Functie: ga naar 'lid worden'
-    const goToLid = () => {
-        if (isAnimating || state === 'lid') return;
-        
-        isAnimating = true;
-        state = 'lid';
-        
-        // Zet classes - CSS regelt de rest
-        locatieLayer.classList.add('fade-out');
-        lidLayer.classList.add('fade-in');
-        
-        // Content pop-effecten
-        locatiePops.forEach(el => {
-            el.classList.remove('visible');
-            el.classList.add('pop-out');
-        });
-        lidPops.forEach((el) => {
-            const isIcon = el.classList.contains('download-icon-img') || el.closest('.location-media');
-            if (isIcon) {
-                setTimeout(() => el.classList.add('pop-in'), 20);
+    }
+
+    // Functie: dagkaarten genereren
+    function generateCards() {
+        const currentDay = getCurrentDay();
+
+        openingHours.forEach((dayData, index) => {
+            const card = document.createElement('div');
+            card.className = 'dag-kaart';
+            if (index === currentDay) {
+                card.classList.add('current-day');
+            }
+            card.dataset.index = index;
+
+            const dayName = document.createElement('h3');
+            dayName.className = 'dag-naam';
+            dayName.textContent = dayData.day;
+
+            const dayShort = document.createElement('p');
+            dayShort.className = 'dag-kort';
+            dayShort.textContent = dayData.short;
+
+            card.appendChild(dayName);
+            card.appendChild(dayShort);
+
+            if (dayData.open) {
+                const times = document.createElement('p');
+                times.className = 'dag-tijden';
+                times.textContent = `${dayData.start} - ${dayData.end}`;
+
+                const activity = document.createElement('p');
+                activity.className = 'dag-activiteit';
+                activity.textContent = dayData.activity;
+
+                card.appendChild(times);
+                card.appendChild(activity);
             } else {
-                setTimeout(() => el.classList.add('pop-in'), 80);
+                const closed = document.createElement('p');
+                closed.className = 'dag-gesloten';
+                closed.textContent = 'Gesloten';
+                card.appendChild(closed);
             }
+
+            container.appendChild(card);
         });
+    }
+
+    // Functie: update card transform
+    function updateCardTransform(card, index, progress) {
+        // Bereken centrum positie
+        const centerIndex = (TOTAL_CARDS - 1) * progress;
+        const offset = index - centerIndex;
         
-        // Reset na animatie duur
-        setTimeout(() => {
-            isAnimating = false;
-        }, 300);
-    };
+        // 3D transformaties
+        const rotationY = offset * ROTATION_PER_CARD;
+        const translateX = offset * CARD_SPACING;
+        const translateZ = -Math.abs(offset) * 100;
+        const scale = 1 - Math.abs(offset) * 0.15;
+        const opacity = Math.max(0.3, 1 - Math.abs(offset) * 0.3);
+        
+        // Zichtbaarheid: max 5 kaarten
+        const isVisible = Math.abs(offset) < 2.5;
+        
+        // Apply transforms
+        card.style.transform = `
+            translateX(${translateX}px)
+            translateZ(${translateZ}px)
+            rotateY(${rotationY}deg)
+            scale(${scale})
+        `;
+        card.style.opacity = opacity;
+        card.style.visibility = isVisible ? 'visible' : 'hidden';
+        card.style.pointerEvents = isVisible ? 'auto' : 'none';
+        
+        // Active state voor middelste kaart
+        if (Math.abs(offset) < 0.3) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
+        }
+    }
+
+    // Functie: init carrousel
+    function initCarrousel() {
+        // Skip op mobiel
+        if (window.matchMedia('(max-width: 768px)').matches) return;
+        
+        // Skip bij reduced motion
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        
+        const cards = document.querySelectorAll('.dag-kaart');
+        if (cards.length === 0) return;
+        
+        // Scroll tracking
+        window.addEventListener('scroll', () => {
+            const rect = section.getBoundingClientRect();
+            const sectionHeight = section.offsetHeight;
+            const viewportHeight = window.innerHeight;
+            
+            // Bereken scroll progress (0 tot 1)
+            if (rect.top <= 0 && rect.bottom >= viewportHeight) {
+                const scrolled = Math.abs(rect.top);
+                const maxScroll = sectionHeight - viewportHeight;
+                targetProgress = Math.min(Math.max(scrolled / maxScroll, 0), 1);
+            }
+        }, { passive: true });
+        
+        // Smooth interpolatie
+        function updateCarrousel() {
+            // Lerp voor smoothness
+            scrollProgress += (targetProgress - scrollProgress) * 0.1;
+            
+            // Update elke kaart positie
+            cards.forEach((card, index) => {
+                updateCardTransform(card, index, scrollProgress);
+            });
+            
+            animationFrame = requestAnimationFrame(updateCarrousel);
+        }
+        
+        updateCarrousel();
+    }
+
+    // Initialisatie
+    header.textContent = generateHeaderText();
+    generateCards();
     
-    // Functie: ga terug naar 'locatie'
-    const goToLocatie = () => {
-        if (isAnimating || state === 'locatie') return;
-        
-        isAnimating = true;
-        state = 'locatie';
-        
-        // Verwijder classes - CSS regelt de rest
-        locatieLayer.classList.remove('fade-out');
-        lidLayer.classList.remove('fade-in');
-        
-        // Content pop-effecten terug
-        locatiePops.forEach(el => {
-            el.classList.remove('pop-out');
-            el.classList.add('visible');
-        });
-        lidPops.forEach(el => {
-            el.classList.remove('pop-in');
-        });
-        
-        // Reset na animatie duur
-        setTimeout(() => {
-            isAnimating = false;
-        }, 300);
-    };
-    
+    // Start carrousel DISABLED - flat layout gewenst
+    // setTimeout(() => {
+    //     initCarrousel();
+    // }, 100);
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+        }
+    });
+})();
+
+// ============================================
+// SPONSORS 3D CARROUSEL
+// ============================================
+(function initSponsorsCarrousel() {
+    const section = document.querySelector('.sponsors-section-outer');
+    const container = document.querySelector('.sponsors-container');
+    const cards = document.querySelectorAll('.sponsor-card');
+
+    if (!section || !container || cards.length === 0) return;
+    if (window.matchMedia('(max-width: 768px)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Constants
+    const ROTATION_PER_CARD = 36;
+    const CARD_SPACING = 400;
+    const TOTAL_CARDS = cards.length;
+
+    // State
+    let scrollProgress = 0;
+    let targetProgress = 0;
+    let animationFrame = null;
+
+    // Update card transform
+    function updateCardTransform(card, index, progress) {
+        const centerIndex = (TOTAL_CARDS - 1) * progress;
+        const offset = index - centerIndex;
+
+        // 3D transformaties (zelfde als openingstijden)
+        const rotationY = offset * ROTATION_PER_CARD;
+        const translateX = offset * CARD_SPACING;
+        const translateZ = -Math.abs(offset) * 100;
+        const scale = 1 - Math.abs(offset) * 0.15;
+        const opacity = Math.max(0.3, 1 - Math.abs(offset) * 0.3);
+
+        // Max 5 kaarten zichtbaar
+        const isVisible = Math.abs(offset) < 2.5;
+
+        // Apply transforms
+        card.style.transform = `
+            translateX(${translateX}px)
+            translateZ(${translateZ}px)
+            rotateY(${rotationY}deg)
+            scale(${scale})
+        `;
+        card.style.opacity = opacity;
+        card.style.visibility = isVisible ? 'visible' : 'hidden';
+        card.style.pointerEvents = isVisible ? 'auto' : 'none';
+
+        // Active state
+        if (Math.abs(offset) < 0.3) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
+        }
+    }
+
+    // Scroll tracking
     window.addEventListener('scroll', () => {
-        if (isAnimating || !isInitialized) return; // Blokkeer tijdens animatie of tijdens initialisatie
-        
-        const rect = scrollSection.getBoundingClientRect();
-        const vh = window.innerHeight;
-        const scrollHeight = rect.height;
-        const currentScrollY = window.scrollY;
-        const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
-        lastScrollY = currentScrollY;
-        
-        // Als scrollSection nog niet sticky is (rect.top > 0), altijd 'locatie'
-        if (rect.top > 0) {
-            if (state !== 'locatie') {
-                goToLocatie();
-            }
-            return;
-        }
-        
-        // Nu is sticky actief (rect.top <= 0)
-        const stickyProgress = Math.min(Math.max(-rect.top / (scrollHeight - vh), 0), 1);
-        const triggerPoint = 0.2;
-        
-        // Bereken scroll afstand binnen sticky fase
-        const scrollDistance = -rect.top; // Hoeveel we binnen sticky fase hebben gescrolld
-        const maxScrollDistance = scrollHeight - vh; // Maximale scroll afstand binnen sticky
-        
-        // Naar beneden → Locatie → Lid (met buffer: pas na extra scroll)
-        // Trigger punt + buffer = gebruiker moet bewust scrollen voordat animatie start
-        if (stickyProgress > triggerPoint && scrollDistance > (triggerPoint * maxScrollDistance) + buffer && state === 'locatie') {
-            goToLid();
-        }
-        
-        // Naar boven ← Lid ← Locatie (met buffer: pas na extra scroll terug)
-        // Trigger punt - buffer = gebruiker moet bewust terug scrollen
-        if (stickyProgress <= triggerPoint && scrollDistance < (triggerPoint * maxScrollDistance) - buffer && state === 'lid') {
-            goToLocatie();
+        const rect = section.getBoundingClientRect();
+        const sectionHeight = section.offsetHeight;
+        const viewportHeight = window.innerHeight;
+
+        if (rect.top <= 0 && rect.bottom >= viewportHeight) {
+            const scrolled = Math.abs(rect.top);
+            const maxScroll = sectionHeight - viewportHeight;
+            targetProgress = Math.min(Math.max(scrolled / maxScroll, 0), 1);
         }
     }, { passive: true });
-});
+
+    // Animation loop
+    function updateCarrousel() {
+        scrollProgress += (targetProgress - scrollProgress) * 0.1;
+
+        cards.forEach((card, index) => {
+            updateCardTransform(card, index, scrollProgress);
+        });
+
+        animationFrame = requestAnimationFrame(updateCarrousel);
+    }
+
+    updateCarrousel();
+
+    // Cleanup
+    window.addEventListener('beforeunload', () => {
+        if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+        }
+    });
+})();

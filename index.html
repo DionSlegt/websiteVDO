@@ -6,10 +6,19 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="VDO - Professionele dienstverlening" name="description"/>
     <title>VDO - VDO Uithoorn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/css/splide.min.css">
-<link href="styles.css" rel="stylesheet"/>
+    <link href="styles.css" rel="stylesheet"/>
 </head>
-<body><header>
+<body>
+<div class="site-background">
+    <img src="artwork/bg-2.png" alt="" />
+</div>
+
+<div class="site-content">
+<header>
         <nav class="navbar">
             <div class="container">
                 <div class="logo">
@@ -20,7 +29,6 @@
 <li><a data-en="About Us" data-nl="Over Ons" href="over.html">Over Ons</a></li>
 <li><a data-en="Board" data-nl="Bestuur" href="bestuur.html">Bestuur</a></li>
 <li><a data-en="Teams" data-nl="Teams" href="teams.html">Teams</a></li>
-<li><a data-en="Sponsors" data-nl="Sponsors" href="sponsors.html">Sponsors</a></li>
                 </ul>
                 <div class="language-toggle">
 <button aria-label="Toggle language" class="language-switch" id="language-toggle">
@@ -38,9 +46,7 @@
         <section class="hero" id="home">
             <div class="hero-content">
                 <div class="hero-left">
-<h1 class="hero-title" data-en="VDO Uithoorn" data-nl="VDO Uithoorn">VDO Uithoorn</h1>
-<p class="hero-description" data-en="VDO is an active table tennis club in Uithoorn where everyone is welcome. Whether you play recreationally or competitively, with us you'll find a place to play, learn and enjoy table tennis." data-nl="VDO is een actieve tafeltennisvereniging in Uithoorn waar iedereen welkom is. Of je nu recreatief speelt of competitief, bij ons vind je een plek om te spelen, te leren en te genieten van tafeltennis.">VDO is een actieve tafeltennisvereniging in Uithoorn waar iedereen welkom is. Of je nu recreatief speelt of competitief, bij ons vind je een plek om te spelen, te leren en te genieten van tafeltennis.</p>
-<p class="hero-description" data-en="We organize training sessions, tournaments and fun activities for all ages. Come visit and experience the atmosphere!" data-nl="We organiseren trainingen, toernooien en gezellige activiteiten voor alle leeftijden. Kom eens langs en ervaar de sfeer!">We organiseren trainingen, toernooien en gezellige activiteiten voor alle leeftijden. Kom eens langs en ervaar de sfeer!</p>
+                <h1 class="hero-title" data-en="VDO Uithoorn" data-nl="VDO Uithoorn">VD<span class="bouncing-o">O</span> Uithoorn</h1>
                 </div>
                 <div class="hero-right">
                     <div class="hero-media">
@@ -51,101 +57,64 @@
                 </div>
             </div>
         </section>
-<section class="about" id="over">
-            <div class="container">
-                <div class="about-content">
-<p data-en="VDO is a table tennis club in Uithoorn for young and old, for recreational and competitive players." data-nl="VDO is een tafeltennisvereniging in Uithoorn voor jong en oud, voor recreanten en voor competitie spelers.">VDO is een tafeltennisvereniging in Uithoorn voor jong en oud, voor recreanten en voor competitie spelers.</p>
-<p data-en="We organize training sessions, activities, and tournaments." data-nl="We organiseren trainingen, activiteiten, en toernooien.">We organiseren trainingen, activiteiten, en toernooien.</p>
-<p data-en="We have active youth and senior departments." data-nl="We hebben actieve jeugd en senioren afdelingen.">We hebben actieve jeugd en senioren afdelingen.</p>
-<p data-en="Interested? Come visit the club or inquire about the possibilities." data-nl="Interesse? Kom eens langs op de club of informeer naar de mogelijkheden.">Interesse? Kom eens langs op de club of informeer naar de mogelijkheden.</p>
-                </div>
-            </div>
-        </section>
-        <section class="photo-gallery" id="fotos">
-            <div id="image-carousel" class="splide">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        <li class="splide__slide"><img src="artwork/IMG_0651_transparent 2.webp" alt="VDO Foto 1"></li>
-                        <li class="splide__slide"><img src="artwork/IMG_0651_transparent.webp" alt="VDO Foto 2"></li>
-                        <li class="splide__slide"><img src="artwork/IMG_0654_transparent.webp" alt="VDO Foto 3"></li>
-                        <li class="splide__slide"><img src="artwork/IMG_0656_transparent.webp" alt="VDO Foto 4"></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-        <section class="locatie-scroll" id="locatie">
-            <div class="locatie-pin fullscreen">
-                <!-- Locatie layer: achtergrond + content gescheiden -->
-                <div class="locatie-layer">
-                    <div class="locatie-bg"></div>
-                    <div class="locatie-content-wrapper">
-                        <div class="locatie-inner">
+        <section class="lid-worden-section" id="lid-worden">
             <div class="container">
                 <div class="location-content">
-                                    <div class="location-left">
-                                        <h2 class="pop" data-en="Our Location" data-nl="Onze Locatie">Onze Locatie</h2>
-                    <div class="location-info">
-                                            <div class="location-card pop">
-                                                <div class="location-address-block">
-                                                    <p class="location-address">Eendracht 4 · 1423 ET Uithoorn</p>
-                                                </div>
-                                            </div>
-                                            <a class="cta-button location-button pop" data-en="Navigate with Google Maps" data-nl="Navigeer met Google Maps" href="https://www.google.com/maps/dir/?api=1&amp;destination=Eendracht+4,+Meerwijk-Oost,+Uithoorn" target="_blank">
-                                                <span class="button-icon">🗺️</span>
-                                                <span>Navigeer met Google Maps</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="location-right">
-                                        <div class="location-media">
-                                            <video class="location-video pop" autoplay muted loop playsinline preload="auto" webkit-playsinline>
-                                                <source src="artwork/Locatie.webm" type="video/webm">
-                                            </video>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="location-left">
+                        <h2 data-en="Join VDO" data-nl="Lid worden van VDO">Lid worden van VDO</h2>
+                        <div class="location-info">
+                            <a class="cta-button location-button" data-en="Download registration form" data-nl="Download inschrijfformulier" href="inschrijfformulier-vdo.pdf" target="_blank">
+                                <span class="button-icon">📥</span>
+                                <span>Download inschrijfformulier</span>
+                            </a>
                         </div>
                     </div>
-                </div>
-                <!-- Lid worden layer: achtergrond + content gescheiden -->
-                <div class="lid-worden-layer">
-                    <div class="lid-worden-bg"></div>
-                    <div class="lid-worden-content-wrapper">
-                        <div class="container">
-                            <div class="location-content">
-                                <div class="location-left">
-                                    <h2 class="pop" data-en="Join VDO" data-nl="Lid worden van VDO">Lid worden van VDO</h2>
-                                    <div class="location-info">
-                                        <p class="pop" data-en="Would you like to become a member of our table tennis club? Download the registration form below and send it filled out to us." data-nl="Wil je lid worden van onze tafeltennisvereniging? Download het inschrijfformulier hieronder en stuur het ingevuld op naar ons.">Wil je lid worden van onze tafeltennisvereniging? Download het inschrijfformulier hieronder en stuur het ingevuld op naar ons.</p>
-                                        <a class="cta-button location-button pop" data-en="Download registration form" data-nl="Download inschrijfformulier" href="inschrijfformulier-vdo.pdf" target="_blank">
-                                            <span class="button-icon">📥</span>
-                                            <span>Download inschrijfformulier</span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="location-right">
-                                    <div class="location-media">
-                                        <img src="images/download-icon.png" alt="Download inschrijfformulier" class="download-icon-img pop">
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="location-right">
+                        <div class="location-media">
+                            <img src="artwork/formulier.png" alt="Inschrijfformulier VDO" class="location-video">
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-        <section class="about" id="meppers" style="padding: 80px 20px;">
-            <div class="container">
-                <h2 data-en="The Meppers" data-nl="De Meppers">De Meppers</h2>
-                <div class="about-content">
-                    <p data-en="Information about The Meppers will appear here." data-nl="Hier komt informatie over De Meppers.">Hier komt informatie over De Meppers.</p>
                 </div>
             </div>
         </section>
     </main>
+    <!-- Openingstijden Section -->
+    <section class="openingstijden-section" id="openingstijden">
+        <div class="container">
+            <h2 class="openingstijden-header" id="openingstijden-header">Openingstijden</h2>
+            <div class="openingstijden-container">
+                <!-- Dagkaarten worden hier dynamisch ingevoegd -->
+            </div>
+        </div>
+    </section>
 
+    <!-- Sponsors Section -->
+    <section class="sponsors-timeline" id="sponsors" aria-labelledby="sponsors-title">
+        <div class="sponsors-timeline__viewport">
+            <div class="sponsors-timeline__header">
+                <p class="sponsors-timeline__eyebrow" data-en="With thanks to" data-nl="Met dank aan">Met dank aan</p>
+                <h2 id="sponsors-title" data-en="Our Sponsors" data-nl="Onze Sponsors">Onze Sponsors</h2>
+                <p data-en="Scroll to see all our sponsors" data-nl="Scroll om al onze sponsors te bekijken">Scroll om al onze sponsors te bekijken</p>
+            </div>
 
+            <div class="sponsors-timeline__track">
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image001.jpg" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image003.jpg" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image004.jpg" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image005.jpg" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image006.jpg" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image007.jpg" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image009.jpg" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image010.gif" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image011.gif" alt="Sponsor" loading="lazy" /></div></article>
+                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image012.gif" alt="Sponsor" loading="lazy" /></div></article>
+            </div>
+
+            <div class="sponsors-timeline__progress">
+                <div class="sponsors-timeline__progress-fill"></div>
+            </div>
+        </div>
+    </section>
 
     <footer>
         <div class="container">
@@ -168,6 +137,22 @@
 <p class="footer-copyright" data-en="© 2025 VDO. All rights reserved." data-nl="© 2025 VDO. Alle rechten voorbehouden.">© 2025 VDO. Alle rechten voorbehouden.</p>
         </div>
     </footer>
+
+<!-- Lightbox voor about carousel -->
+<div id="lightbox" class="lightbox">
+  <button class="lightbox-close" aria-label="Sluiten">&times;</button>
+  <button class="lightbox-prev" aria-label="Vorige">❮</button>
+  <button class="lightbox-next" aria-label="Volgende">❯</button>
+  <img src="" alt="" class="lightbox-image">
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>
-<script src="script.js"></script><script src="cms-loader.js"></script></body>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+<script src="parallax.js"></script>
+<script src="cms-loader.js"></script>
+<script src="sponsors-timeline.js"></script>
+</div>
+</body>
 </html>
