@@ -223,11 +223,12 @@ app.post('/api/intake', intakeLimiter, async (req, res) => {
                 : 'Niet ingevuld';
 
         const apiKey = process.env.RESEND_API_KEY;
-        const receiver = process.env.INTAKE_RECEIVER_EMAIL;
+        const receiver =
+            process.env.INTAKE_RECEIVER_EMAIL || 'vdotest@outlook.com';
 
-        if (!apiKey || !receiver) {
+        if (!apiKey) {
             console.error('Intake mail misconfigured: missing env vars', {
-                hasApiKey: Boolean(apiKey),
+                hasApiKey: false,
                 hasReceiver: Boolean(receiver)
             });
             return res.status(500).json({
