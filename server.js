@@ -9,6 +9,9 @@ const { Resend } = require('resend');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Render / reverse proxies zetten X-Forwarded-For
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json({ limit: '32kb' }));
@@ -223,8 +226,13 @@ app.post('/api/intake', intakeLimiter, async (req, res) => {
                 : 'Niet ingevuld';
 
         const apiKey = process.env.RESEND_API_KEY;
-        const receiver =
-            process.env.INTAKE_RECEIVER_EMAIL || 'vdotest@outlook.com';
+        const configuredReceiver = sanitizePlainText(
+            process.env.INTAKE_RECEIVER_EMAIL || '',
+            120
+        ).toLowerCase();
+        const receiver = isValidEmail(configuredReceiver)
+            ? configuredReceiver
+            : 'vdotest@outlook.com';
 
         if (!apiKey) {
             console.error('Intake mail misconfigured: missing env vars', {
@@ -234,6 +242,10 @@ app.post('/api/intake', intakeLimiter, async (req, res) => {
             return res.status(500).json({
                 error: 'Het versturen is niet gelukt. Probeer het opnieuw.'
             });
+        }
+
+        if (!isValidEmail(configuredReceiver) && process.env.INTAKE_RECEIVER_EMAIL) {
+            console.error('Intake mail misconfigured: invalid INTAKE_RECEIVER_EMAIL format');
         }
 
         const resend = new Resend(apiKey);
