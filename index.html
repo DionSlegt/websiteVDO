@@ -29,6 +29,7 @@
 <li><a data-en="About Us" data-nl="Over Ons" href="over.html">Over Ons</a></li>
 <li><a data-en="Board" data-nl="Bestuur" href="bestuur.html">Bestuur</a></li>
 <li><a data-en="Teams" data-nl="Teams" href="teams.html">Teams</a></li>
+<li><a data-en="Sponsors" data-nl="Sponsors" href="sponsors.html">Sponsors</a></li>
                 </ul>
                 <div class="language-toggle">
 <button aria-label="Toggle language" class="language-switch" id="language-toggle">
@@ -77,6 +78,149 @@
                 </div>
             </div>
         </section>
+
+        <section class="intake-section" id="intake" aria-labelledby="intake-title">
+            <div class="container">
+                <h2 id="intake-title" class="intake-title">Intakeformulier</h2>
+                <p class="intake-intro">Meld je aan voor een intake bij VDO. We nemen zo snel mogelijk contact met je op.</p>
+
+                <div class="intake-card">
+                    <div class="intake-success" id="intake-success" hidden>
+                        <h3>Je intake is verzonden!</h3>
+                        <p>Bedankt voor je aanmelding. We nemen zo snel mogelijk contact met je op.</p>
+                        <button type="button" class="intake-btn intake-btn--primary" id="intake-reset">Nieuwe intake invullen</button>
+                    </div>
+
+                    <form class="intake-form" id="intake-form" novalidate>
+                        <div class="intake-progress" aria-live="polite">
+                            <span id="intake-step-label">Stap 1 van 3</span>
+                            <div class="intake-progress-bar" aria-hidden="true">
+                                <div class="intake-progress-fill" id="intake-progress-fill"></div>
+                            </div>
+                        </div>
+
+                        <div class="intake-steps-viewport">
+                            <div class="intake-steps-track" id="intake-steps-track">
+                                <!-- Stap 1 -->
+                                <fieldset class="intake-step" data-step="1">
+                                    <legend class="intake-step-title">Contactgegevens</legend>
+
+                                    <label class="intake-field">
+                                        <span>Naam <em>*</em></span>
+                                        <input type="text" name="name" maxlength="100" autocomplete="name" required>
+                                    </label>
+
+                                    <label class="intake-field">
+                                        <span>E-mailadres <em>*</em></span>
+                                        <input type="email" name="email" maxlength="120" autocomplete="email" required>
+                                    </label>
+
+                                    <label class="intake-field">
+                                        <span>Telefoonnummer</span>
+                                        <input type="tel" name="phone" maxlength="40" autocomplete="tel">
+                                    </label>
+                                </fieldset>
+
+                                <!-- Stap 2 -->
+                                <fieldset class="intake-step" data-step="2" hidden>
+                                    <legend class="intake-step-title">Tafeltennis</legend>
+
+                                    <fieldset class="intake-choice-group">
+                                        <legend>Heb je eerder getafeltennist? <em>*</em></legend>
+                                        <div class="intake-choice-row">
+                                            <label class="intake-chip">
+                                                <input type="radio" name="playedBefore" value="ja" required>
+                                                <span>Ja</span>
+                                            </label>
+                                            <label class="intake-chip">
+                                                <input type="radio" name="playedBefore" value="nee" required>
+                                                <span>Nee</span>
+                                            </label>
+                                        </div>
+                                    </fieldset>
+
+                                    <label class="intake-field" id="intake-experience-field" hidden>
+                                        <span>Hoeveel ervaring heb je?</span>
+                                        <textarea name="experience" maxlength="500" rows="3" placeholder="Bijvoorbeeld: 2 jaar recreatief gespeeld"></textarea>
+                                    </label>
+
+                                    <fieldset class="intake-choice-group">
+                                        <legend>Waar ben je in geïnteresseerd? <em>*</em></legend>
+                                        <div class="intake-choice-grid">
+                                            <label class="intake-chip">
+                                                <input type="checkbox" name="interests" value="Recreatief spelen">
+                                                <span>Recreatief spelen</span>
+                                            </label>
+                                            <label class="intake-chip">
+                                                <input type="checkbox" name="interests" value="Training">
+                                                <span>Training</span>
+                                            </label>
+                                            <label class="intake-chip">
+                                                <input type="checkbox" name="interests" value="Competitie">
+                                                <span>Competitie</span>
+                                            </label>
+                                            <label class="intake-chip">
+                                                <input type="checkbox" name="interests" value="Proeftraining">
+                                                <span>Proeftraining</span>
+                                            </label>
+                                        </div>
+                                    </fieldset>
+                                </fieldset>
+
+                                <!-- Stap 3 -->
+                                <fieldset class="intake-step" data-step="3" hidden>
+                                    <legend class="intake-step-title">Beschikbaarheid</legend>
+
+                                    <fieldset class="intake-choice-group">
+                                        <legend>Op welke avonden ben je beschikbaar? <em>*</em></legend>
+                                        <div class="intake-choice-grid">
+                                            <label class="intake-chip">
+                                                <input type="checkbox" name="evenings" value="Dinsdag">
+                                                <span>Dinsdag</span>
+                                            </label>
+                                            <label class="intake-chip">
+                                                <input type="checkbox" name="evenings" value="Woensdag">
+                                                <span>Woensdag</span>
+                                            </label>
+                                            <label class="intake-chip">
+                                                <input type="checkbox" name="evenings" value="Donderdag">
+                                                <span>Donderdag</span>
+                                            </label>
+                                            <label class="intake-chip">
+                                                <input type="checkbox" name="evenings" value="Vrijdag">
+                                                <span>Vrijdag</span>
+                                            </label>
+                                        </div>
+                                    </fieldset>
+
+                                    <label class="intake-field">
+                                        <span>Extra opmerkingen</span>
+                                        <textarea name="remarks" maxlength="1000" rows="4" placeholder="Optioneel"></textarea>
+                                    </label>
+
+                                    <p class="intake-privacy">We gebruiken je gegevens alleen om contact met je op te nemen over je intake.</p>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <!-- Honeypot -->
+                        <div class="intake-honeypot" aria-hidden="true">
+                            <label>Website
+                                <input type="text" name="website" tabindex="-1" autocomplete="off">
+                            </label>
+                        </div>
+
+                        <p class="intake-error" id="intake-error" role="alert" hidden></p>
+
+                        <div class="intake-actions">
+                            <button type="button" class="intake-btn intake-btn--secondary" id="intake-prev" hidden>Vorige</button>
+                            <button type="button" class="intake-btn intake-btn--primary" id="intake-next">Volgende</button>
+                            <button type="submit" class="intake-btn intake-btn--primary" id="intake-submit" hidden>Intake versturen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
     </main>
     <!-- Openingstijden Section -->
     <section class="openingstijden-section" id="openingstijden">
@@ -88,31 +232,12 @@
         </div>
     </section>
 
-    <!-- Sponsors Section -->
-    <section class="sponsors-timeline" id="sponsors" aria-labelledby="sponsors-title">
-        <div class="sponsors-timeline__viewport">
-            <div class="sponsors-timeline__header">
-                <p class="sponsors-timeline__eyebrow" data-en="With thanks to" data-nl="Met dank aan">Met dank aan</p>
-                <h2 id="sponsors-title" data-en="Our Sponsors" data-nl="Onze Sponsors">Onze Sponsors</h2>
-                <p data-en="Scroll to see all our sponsors" data-nl="Scroll om al onze sponsors te bekijken">Scroll om al onze sponsors te bekijken</p>
-            </div>
-
-            <div class="sponsors-timeline__track">
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image001.jpg" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image003.jpg" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image004.jpg" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image005.jpg" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image006.jpg" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image007.jpg" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image009.jpg" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image010.gif" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image011.gif" alt="Sponsor" loading="lazy" /></div></article>
-                <article class="sponsor-item"><div class="sponsor-tile"><img src="Sponsors/image012.gif" alt="Sponsor" loading="lazy" /></div></article>
-            </div>
-
-            <div class="sponsors-timeline__progress">
-                <div class="sponsors-timeline__progress-fill"></div>
-            </div>
+    <section class="homepage-video-section" aria-labelledby="homepage-sponsors-title">
+        <div class="container">
+            <h2 id="homepage-sponsors-title" class="homepage-sponsors-title" data-en="Sponsors of VDO" data-nl="Sponsors van VDO">Sponsors van VDO</h2>
+            <video class="homepage-webm" autoplay muted loop playsinline>
+                <source src="Sponsors/VDO%20SPONSOREN%202.webm" type="video/webm">
+            </video>
         </div>
     </section>
 
@@ -150,9 +275,9 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="script.js"></script>
+<script src="intake.js"></script>
 <script src="parallax.js"></script>
 <script src="cms-loader.js"></script>
-<script src="sponsors-timeline.js"></script>
 </div>
 </body>
 </html>
