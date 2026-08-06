@@ -14,6 +14,8 @@ Adobe After Effects Auto-Save/
 !artwork/ALL_converted_final.webm
 !artwork/Badje_2_converted.webm
 !artwork/Locatie.webm
+# Uitzondering voor sponsors-video op homepage
+!Sponsors/VDO SPONSOREN 2.webm
 
 # Node
 node_modules/
