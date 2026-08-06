@@ -105,65 +105,121 @@
                                 <fieldset class="intake-step" data-step="1">
                                     <legend class="intake-step-title">Contactgegevens</legend>
 
-                                    <label class="intake-field">
-                                        <span>Naam <em>*</em></span>
-                                        <input type="text" name="name" maxlength="100" autocomplete="name" required>
-                                    </label>
+                                    <fieldset class="intake-choice-group" id="intake-for-group" aria-required="true" aria-describedby="intake-for-error">
+                                        <legend>Voor wie vul je deze intake in?</legend>
+                                        <div class="intake-choice-row">
+                                            <label class="intake-chip" for="intake-for-self">
+                                                <input type="radio" id="intake-for-self" name="intakeFor" value="self" required>
+                                                <span>Voor mijzelf</span>
+                                            </label>
+                                            <label class="intake-chip" for="intake-for-child">
+                                                <input type="radio" id="intake-for-child" name="intakeFor" value="child">
+                                                <span>Voor mijn kind</span>
+                                            </label>
+                                        </div>
+                                        <p class="intake-field-error" id="intake-for-error" role="alert" hidden></p>
+                                    </fieldset>
 
-                                    <label class="intake-field">
-                                        <span>E-mailadres <em>*</em></span>
-                                        <input type="email" name="email" maxlength="120" autocomplete="email" required>
-                                    </label>
+                                    <fieldset class="intake-field-group" id="intake-self-fields" hidden>
+                                        <legend class="visually-hidden">Gegevens voor jezelf</legend>
 
-                                    <label class="intake-field">
-                                        <span>Telefoonnummer</span>
-                                        <input type="tel" name="phone" maxlength="40" autocomplete="tel">
-                                    </label>
+                                        <div class="intake-field">
+                                            <label for="intake-name">Naam</label>
+                                            <input type="text" id="intake-name" name="name" maxlength="100" autocomplete="name" placeholder="verplicht veld" aria-describedby="intake-name-error">
+                                            <p class="intake-field-error" id="intake-name-error" role="alert" hidden></p>
+                                        </div>
+
+                                        <div class="intake-field">
+                                            <label for="intake-email">E-mailadres</label>
+                                            <input type="email" id="intake-email" name="email" maxlength="120" autocomplete="email" placeholder="verplicht veld" aria-describedby="intake-email-error">
+                                            <p class="intake-field-error" id="intake-email-error" role="alert" hidden></p>
+                                        </div>
+
+                                        <div class="intake-field">
+                                            <label for="intake-phone">Telefoonnummer</label>
+                                            <input type="tel" id="intake-phone" name="phone" maxlength="40" autocomplete="tel">
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset class="intake-field-group" id="intake-child-fields" hidden>
+                                        <legend class="visually-hidden">Gegevens ouder/verzorger en kind</legend>
+
+                                        <div class="intake-field">
+                                            <label for="intake-parent-name">Naam ouder/verzorger</label>
+                                            <input type="text" id="intake-parent-name" name="parentName" maxlength="100" autocomplete="name" placeholder="verplicht veld" aria-describedby="intake-parent-name-error">
+                                            <p class="intake-field-error" id="intake-parent-name-error" role="alert" hidden></p>
+                                        </div>
+
+                                        <div class="intake-field">
+                                            <label for="intake-parent-email">E-mailadres ouder/verzorger</label>
+                                            <input type="email" id="intake-parent-email" name="parentEmail" maxlength="120" autocomplete="email" placeholder="verplicht veld" aria-describedby="intake-parent-email-error">
+                                            <p class="intake-field-error" id="intake-parent-email-error" role="alert" hidden></p>
+                                        </div>
+
+                                        <div class="intake-field">
+                                            <label for="intake-parent-phone">Telefoonnummer ouder/verzorger</label>
+                                            <input type="tel" id="intake-parent-phone" name="parentPhone" maxlength="40" autocomplete="tel">
+                                        </div>
+
+                                        <div class="intake-field">
+                                            <label for="intake-child-name">Naam kind</label>
+                                            <input type="text" id="intake-child-name" name="childName" maxlength="100" autocomplete="off" aria-describedby="intake-child-name-error">
+                                            <p class="intake-field-error" id="intake-child-name-error" role="alert" hidden></p>
+                                        </div>
+
+                                        <div class="intake-field">
+                                            <label for="intake-child-age">Leeftijd kind</label>
+                                            <input type="number" id="intake-child-age" name="childAge" min="1" max="17" step="1" inputmode="numeric" placeholder="verplicht veld" aria-describedby="intake-child-age-error">
+                                            <p class="intake-field-error" id="intake-child-age-error" role="alert" hidden></p>
+                                        </div>
+                                    </fieldset>
                                 </fieldset>
 
                                 <!-- Stap 2 -->
                                 <fieldset class="intake-step" data-step="2" hidden>
                                     <legend class="intake-step-title">Tafeltennis</legend>
 
-                                    <fieldset class="intake-choice-group">
-                                        <legend>Heb je eerder getafeltennist? <em>*</em></legend>
+                                    <fieldset class="intake-choice-group" id="intake-played-group" aria-required="true" aria-describedby="intake-played-error">
+                                        <legend>Heb je eerder getafeltennist?</legend>
                                         <div class="intake-choice-row">
-                                            <label class="intake-chip">
-                                                <input type="radio" name="playedBefore" value="ja" required>
+                                            <label class="intake-chip" for="intake-played-ja">
+                                                <input type="radio" id="intake-played-ja" name="playedBefore" value="ja" required>
                                                 <span>Ja</span>
                                             </label>
-                                            <label class="intake-chip">
-                                                <input type="radio" name="playedBefore" value="nee" required>
+                                            <label class="intake-chip" for="intake-played-nee">
+                                                <input type="radio" id="intake-played-nee" name="playedBefore" value="nee">
                                                 <span>Nee</span>
                                             </label>
                                         </div>
+                                        <p class="intake-field-error" id="intake-played-error" role="alert" hidden></p>
                                     </fieldset>
 
-                                    <label class="intake-field" id="intake-experience-field" hidden>
-                                        <span>Hoeveel ervaring heb je?</span>
-                                        <textarea name="experience" maxlength="500" rows="3" placeholder="Bijvoorbeeld: 2 jaar recreatief gespeeld"></textarea>
-                                    </label>
+                                    <div class="intake-field" id="intake-experience-field" hidden>
+                                        <label for="intake-experience">Hoeveel ervaring heb je?</label>
+                                        <textarea id="intake-experience" name="experience" maxlength="500" rows="3" placeholder="Bijvoorbeeld: 2 jaar recreatief gespeeld"></textarea>
+                                    </div>
 
-                                    <fieldset class="intake-choice-group">
-                                        <legend>Waar ben je in geïnteresseerd? <em>*</em></legend>
+                                    <fieldset class="intake-choice-group" id="intake-interests-group" aria-required="true" aria-describedby="intake-interests-error">
+                                        <legend>Waar ben je in geïnteresseerd?</legend>
                                         <div class="intake-choice-grid">
-                                            <label class="intake-chip">
-                                                <input type="checkbox" name="interests" value="Recreatief spelen">
+                                            <label class="intake-chip" for="intake-interest-recreatief">
+                                                <input type="checkbox" id="intake-interest-recreatief" name="interests" value="Recreatief spelen">
                                                 <span>Recreatief spelen</span>
                                             </label>
-                                            <label class="intake-chip">
-                                                <input type="checkbox" name="interests" value="Training">
+                                            <label class="intake-chip" for="intake-interest-training">
+                                                <input type="checkbox" id="intake-interest-training" name="interests" value="Training">
                                                 <span>Training</span>
                                             </label>
-                                            <label class="intake-chip">
-                                                <input type="checkbox" name="interests" value="Competitie">
+                                            <label class="intake-chip" for="intake-interest-competitie">
+                                                <input type="checkbox" id="intake-interest-competitie" name="interests" value="Competitie">
                                                 <span>Competitie</span>
                                             </label>
-                                            <label class="intake-chip">
-                                                <input type="checkbox" name="interests" value="Proeftraining">
+                                            <label class="intake-chip" for="intake-interest-proef">
+                                                <input type="checkbox" id="intake-interest-proef" name="interests" value="Proeftraining">
                                                 <span>Proeftraining</span>
                                             </label>
                                         </div>
+                                        <p class="intake-field-error" id="intake-interests-error" role="alert" hidden></p>
                                     </fieldset>
                                 </fieldset>
 
@@ -171,46 +227,50 @@
                                 <fieldset class="intake-step" data-step="3" hidden>
                                     <legend class="intake-step-title">Beschikbaarheid</legend>
 
-                                    <fieldset class="intake-choice-group">
-                                        <legend>Op welke avonden ben je beschikbaar? <em>*</em></legend>
+                                    <fieldset class="intake-choice-group" id="intake-evenings-group" aria-required="true" aria-describedby="intake-evenings-error">
+                                        <legend>Op welke avonden ben je beschikbaar?</legend>
                                         <div class="intake-choice-grid">
-                                            <label class="intake-chip">
-                                                <input type="checkbox" name="evenings" value="Dinsdag">
+                                            <label class="intake-chip" for="intake-evening-dinsdag">
+                                                <input type="checkbox" id="intake-evening-dinsdag" name="evenings" value="Dinsdag">
                                                 <span>Dinsdag</span>
                                             </label>
-                                            <label class="intake-chip">
-                                                <input type="checkbox" name="evenings" value="Woensdag">
+                                            <label class="intake-chip" for="intake-evening-woensdag">
+                                                <input type="checkbox" id="intake-evening-woensdag" name="evenings" value="Woensdag">
                                                 <span>Woensdag</span>
                                             </label>
-                                            <label class="intake-chip">
-                                                <input type="checkbox" name="evenings" value="Donderdag">
+                                            <label class="intake-chip" for="intake-evening-donderdag">
+                                                <input type="checkbox" id="intake-evening-donderdag" name="evenings" value="Donderdag">
                                                 <span>Donderdag</span>
                                             </label>
-                                            <label class="intake-chip">
-                                                <input type="checkbox" name="evenings" value="Vrijdag">
+                                            <label class="intake-chip" for="intake-evening-vrijdag">
+                                                <input type="checkbox" id="intake-evening-vrijdag" name="evenings" value="Vrijdag">
                                                 <span>Vrijdag</span>
                                             </label>
                                         </div>
+                                        <p class="intake-field-error" id="intake-evenings-error" role="alert" hidden></p>
                                     </fieldset>
 
-                                    <label class="intake-field">
-                                        <span>Extra opmerkingen</span>
-                                        <textarea name="remarks" maxlength="1000" rows="4" placeholder="Optioneel"></textarea>
-                                    </label>
-
-                                    <p class="intake-privacy">We gebruiken je gegevens alleen om contact met je op te nemen over je intake.</p>
+                                    <div class="intake-field">
+                                        <label for="intake-remarks">Extra opmerkingen</label>
+                                        <textarea id="intake-remarks" name="remarks" maxlength="1000" rows="4" placeholder="Optioneel" aria-describedby="intake-remarks-help"></textarea>
+                                        <p class="intake-field-help" id="intake-remarks-help">Deel hier geen medische of andere gevoelige persoonsgegevens.</p>
+                                    </div>
                                 </fieldset>
                             </div>
                         </div>
 
                         <!-- Honeypot -->
                         <div class="intake-honeypot" aria-hidden="true">
-                            <label>Website
-                                <input type="text" name="website" tabindex="-1" autocomplete="off">
+                            <label for="intake-website">Website
+                                <input type="text" id="intake-website" name="website" tabindex="-1" autocomplete="off">
                             </label>
                         </div>
 
                         <p class="intake-error" id="intake-error" role="alert" hidden></p>
+
+                        <p class="intake-privacy" id="intake-privacy-note" hidden>
+                            We gebruiken je gegevens alleen om je intake te behandelen en contact met je op te nemen over een proeftraining of lidmaatschap. Vul je het formulier in voor een kind? Dan gebruiken we de gegevens van de ouder of verzorger om contact op te nemen over de intake van het kind. Lees meer in onze <a href="/privacy">privacyverklaring</a>.
+                        </p>
 
                         <div class="intake-actions">
                             <button type="button" class="intake-btn intake-btn--secondary" id="intake-prev" hidden>Vorige</button>
@@ -260,6 +320,7 @@
                 </div>
             </div>
 <p class="footer-copyright" data-en="© 2025 VDO. All rights reserved." data-nl="© 2025 VDO. Alle rechten voorbehouden.">© 2025 VDO. Alle rechten voorbehouden.</p>
+            <p class="footer-legal"><a href="/privacy">Privacy</a></p>
         </div>
     </footer>
 

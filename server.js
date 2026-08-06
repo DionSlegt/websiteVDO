@@ -12,10 +12,24 @@ const PORT = process.env.PORT || 3000;
 // Render / reverse proxies zetten X-Forwarded-For
 app.set('trust proxy', 1);
 
+// Basis security headers (zonder helmet package)
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    next();
+});
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json({ limit: '32kb' }));
 app.use(express.static('.')); // Serve static files from current directory
+
+// Pretty URL for privacy page (static serves /privacy.html, not /privacy)
+app.get('/privacy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'privacy.html'));
+});
 
 const intakeLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -176,6 +190,19 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Server is running' });
 });
 
+function parseChildAge(value) {
+    if (typeof value === 'number') {
+        if (!Number.isInteger(value) || value < 1 || value > 17) return null;
+        return value;
+    }
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    if (!/^\d{1,2}$/.test(trimmed)) return null;
+    const age = Number(trimmed);
+    if (!Number.isInteger(age) || age < 1 || age > 17) return null;
+    return age;
+}
+
 // Intake form submission
 app.post('/api/intake', intakeLimiter, async (req, res) => {
     try {
@@ -188,19 +215,53 @@ app.post('/api/intake', intakeLimiter, async (req, res) => {
             });
         }
 
-        const name = sanitizePlainText(body.name, 100);
-        const email = sanitizePlainText(body.email, 120).toLowerCase();
-        const phone = sanitizePlainText(body.phone || '', 40);
+        const intakeFor = sanitizePlainText(body.intakeFor, 10).toLowerCase();
         const playedBeforeRaw = sanitizePlainText(body.playedBefore, 10).toLowerCase();
         const experience = sanitizePlainText(body.experience || '', 500);
         const remarks = sanitizePlainText(body.remarks || '', 1000);
         const interests = normalizeChoiceList(body.interests, INTEREST_OPTIONS);
         const evenings = normalizeChoiceList(body.evenings, EVENING_OPTIONS);
 
-        if (!name || !isValidEmail(email)) {
+        if (intakeFor !== 'self' && intakeFor !== 'child') {
             return res.status(400).json({
                 error: 'Het versturen is niet gelukt. Probeer het opnieuw.'
             });
+        }
+
+        let contactName = '';
+        let contactEmail = '';
+        let contactPhone = '';
+        let parentName = '';
+        let childName = '';
+        let childAge = null;
+
+        if (intakeFor === 'self') {
+            contactName = sanitizePlainText(body.name, 100);
+            contactEmail = sanitizePlainText(body.email, 120).toLowerCase();
+            contactPhone = sanitizePlainText(body.phone || '', 40);
+
+            if (!contactName || !isValidEmail(contactEmail)) {
+                return res.status(400).json({
+                    error: 'Het versturen is niet gelukt. Probeer het opnieuw.'
+                });
+            }
+        } else {
+            parentName = sanitizePlainText(body.parentName, 100);
+            contactEmail = sanitizePlainText(body.parentEmail, 120).toLowerCase();
+            contactPhone = sanitizePlainText(body.parentPhone || '', 40);
+            childName = sanitizePlainText(body.childName, 100);
+            childAge = parseChildAge(body.childAge);
+            contactName = parentName;
+
+            if (
+                !parentName ||
+                !isValidEmail(contactEmail) ||
+                childAge === null
+            ) {
+                return res.status(400).json({
+                    error: 'Het versturen is niet gelukt. Probeer het opnieuw.'
+                });
+            }
         }
 
         if (playedBeforeRaw !== 'ja' && playedBeforeRaw !== 'nee') {
@@ -213,11 +274,6 @@ app.post('/api/intake', intakeLimiter, async (req, res) => {
             return res.status(400).json({
                 error: 'Het versturen is niet gelukt. Probeer het opnieuw.'
             });
-        }
-
-        if (playedBeforeRaw === 'nee' && experience) {
-            // Experience should only be set when played before = ja
-            // Ignore unexpected experience when "nee"
         }
 
         const experienceText =
@@ -253,17 +309,50 @@ app.post('/api/intake', intakeLimiter, async (req, res) => {
             process.env.INTAKE_FROM_EMAIL ||
             'VDO Uithoorn <onboarding@resend.dev>';
 
+        const intakeForLabel = intakeFor === 'child' ? 'kind' : 'mijzelf';
+        const childNameDisplay = childName || 'Niet ingevuld';
+        const subjectName =
+            intakeFor === 'child' ? `kind: ${childNameDisplay}` : contactName;
+
+        const contactPlainLines =
+            intakeFor === 'child'
+                ? [
+                      'Intake voor:',
+                      intakeForLabel,
+                      '',
+                      'Naam ouder/verzorger:',
+                      parentName,
+                      '',
+                      'E-mailadres ouder/verzorger:',
+                      contactEmail,
+                      '',
+                      'Telefoonnummer ouder/verzorger:',
+                      contactPhone || 'Niet ingevuld',
+                      '',
+                      'Naam kind:',
+                      childNameDisplay,
+                      '',
+                      'Leeftijd kind:',
+                      String(childAge)
+                  ]
+                : [
+                      'Intake voor:',
+                      intakeForLabel,
+                      '',
+                      'Naam:',
+                      contactName,
+                      '',
+                      'E-mailadres:',
+                      contactEmail,
+                      '',
+                      'Telefoonnummer:',
+                      contactPhone || 'Niet ingevuld'
+                  ];
+
         const plainBody = [
             'Nieuwe intake via de VDO-website',
             '',
-            'Naam:',
-            name,
-            '',
-            'E-mailadres:',
-            email,
-            '',
-            'Telefoonnummer:',
-            phone || 'Niet ingevuld',
+            ...contactPlainLines,
             '',
             'Eerder getafeltennist:',
             playedBeforeRaw,
@@ -281,11 +370,26 @@ app.post('/api/intake', intakeLimiter, async (req, res) => {
             remarks || 'Geen opmerkingen'
         ].join('\n');
 
+        const contactHtml =
+            intakeFor === 'child'
+                ? `
+            <p><strong>Intake voor:</strong><br>${escapeForEmail(intakeForLabel)}</p>
+            <p><strong>Naam ouder/verzorger:</strong><br>${escapeForEmail(parentName)}</p>
+            <p><strong>E-mailadres ouder/verzorger:</strong><br>${escapeForEmail(contactEmail)}</p>
+            <p><strong>Telefoonnummer ouder/verzorger:</strong><br>${escapeForEmail(contactPhone || 'Niet ingevuld')}</p>
+            <p><strong>Naam kind:</strong><br>${escapeForEmail(childNameDisplay)}</p>
+            <p><strong>Leeftijd kind:</strong><br>${escapeForEmail(String(childAge))}</p>
+                `
+                : `
+            <p><strong>Intake voor:</strong><br>${escapeForEmail(intakeForLabel)}</p>
+            <p><strong>Naam:</strong><br>${escapeForEmail(contactName)}</p>
+            <p><strong>E-mailadres:</strong><br>${escapeForEmail(contactEmail)}</p>
+            <p><strong>Telefoonnummer:</strong><br>${escapeForEmail(contactPhone || 'Niet ingevuld')}</p>
+                `;
+
         const htmlBody = `
             <p><strong>Nieuwe intake via de VDO-website</strong></p>
-            <p><strong>Naam:</strong><br>${escapeForEmail(name)}</p>
-            <p><strong>E-mailadres:</strong><br>${escapeForEmail(email)}</p>
-            <p><strong>Telefoonnummer:</strong><br>${escapeForEmail(phone || 'Niet ingevuld')}</p>
+            ${contactHtml}
             <p><strong>Eerder getafeltennist:</strong><br>${escapeForEmail(playedBeforeRaw)}</p>
             <p><strong>Ervaring:</strong><br>${escapeForEmail(experienceText)}</p>
             <p><strong>Interesse:</strong><br>${escapeForEmail(interests.join(', '))}</p>
@@ -296,8 +400,8 @@ app.post('/api/intake', intakeLimiter, async (req, res) => {
         const { error } = await resend.emails.send({
             from: fromAddress,
             to: [receiver],
-            replyTo: email,
-            subject: `Nieuwe intake via de VDO-website – ${name}`,
+            replyTo: contactEmail,
+            subject: `Nieuwe intake via de VDO-website – ${subjectName}`,
             text: plainBody,
             html: htmlBody
         });

@@ -2757,6 +2757,24 @@ footer {
     border-top: 1px solid var(--border-color);
 }
 
+.footer-legal {
+    text-align: center;
+    margin: 0.75rem 0 0;
+    font-size: 0.85rem;
+}
+
+.footer-legal a {
+    color: rgba(245, 245, 245, 0.85);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-legal a:hover,
+.footer-legal a:focus-visible {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
 /* Animations */
 @keyframes fadeInUp {
     from {
@@ -4812,6 +4830,38 @@ body {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+.intake-required-note {
+    margin: 0 0 1.1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: rgba(26, 26, 46, 0.7);
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.intake-field-group {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+
+.intake-field-group[hidden] {
+    display: none !important;
+}
+
+.intake-field-group > legend.visually-hidden,
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .intake-field {
     display: flex;
     flex-direction: column;
@@ -4820,6 +4870,7 @@ body {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+.intake-field > label,
 .intake-field > span,
 .intake-choice-group > legend {
     font-weight: 600;
@@ -4829,8 +4880,35 @@ body {
 
 .intake-field em,
 .intake-choice-group em {
-    color: #0066ff;
+    color: rgba(26, 26, 46, 0.45);
     font-style: normal;
+}
+
+.intake-field input::placeholder,
+.intake-field textarea::placeholder {
+    color: rgba(26, 26, 46, 0.4);
+    opacity: 1;
+    font-weight: 500;
+}
+
+.intake-field-help {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: rgba(26, 26, 46, 0.65);
+    line-height: 1.45;
+}
+
+.intake-field-error {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #7a1212;
+    line-height: 1.4;
+}
+
+.intake-field-error[hidden] {
+    display: none !important;
 }
 
 .intake-field input,
@@ -4856,8 +4934,12 @@ body {
 }
 
 .intake-field.is-invalid input,
-.intake-field.is-invalid textarea,
-.intake-choice-group.is-invalid {
+.intake-field.is-invalid textarea {
+    border-color: rgba(200, 40, 40, 0.55);
+    box-shadow: 0 0 0 3px rgba(200, 40, 40, 0.12);
+}
+
+.intake-choice-group.is-invalid .intake-chip span {
     border-color: rgba(200, 40, 40, 0.55);
 }
 
@@ -4913,10 +4995,26 @@ body {
 }
 
 .intake-privacy {
-    margin: 0.5rem 0 0;
-    font-size: 0.9rem;
+    margin: 1.25rem 0 0;
+    font-size: 0.88rem;
     color: rgba(26, 26, 46, 0.75);
-    line-height: 1.5;
+    line-height: 1.55;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.intake-privacy[hidden] {
+    display: none !important;
+}
+
+.intake-privacy a {
+    color: #003d99;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.intake-privacy a:hover,
+.intake-privacy a:focus-visible {
+    color: #0066ff;
 }
 
 .intake-honeypot {
@@ -5035,6 +5133,102 @@ body {
     .intake-btn {
         transition: none !important;
         animation: none !important;
+    }
+}
+
+/* Privacy page */
+.privacy-section {
+    padding: 80px 20px 100px;
+}
+
+.privacy-card {
+    max-width: 820px;
+    margin: 0 auto;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.28),
+        rgba(255, 255, 255, 0.12)
+    );
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.40);
+    box-shadow:
+        0 24px 78px rgba(0, 0, 0, 0.12),
+        0 8px 24px rgba(0, 0, 0, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.14);
+    padding: 2.5rem;
+    color: #1a1a2e;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.privacy-card h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.25rem;
+    color: #1a1a2e;
+}
+
+.privacy-card h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin: 2rem 0 0.75rem;
+    color: #1a1a2e;
+}
+
+.privacy-card p,
+.privacy-card li {
+    font-size: 0.98rem;
+    line-height: 1.65;
+    font-weight: 500;
+    color: rgba(26, 26, 46, 0.9);
+}
+
+.privacy-card p {
+    margin: 0 0 0.9rem;
+}
+
+.privacy-card ul {
+    margin: 0 0 0.9rem;
+    padding-left: 1.25rem;
+}
+
+.privacy-card li {
+    margin-bottom: 0.35rem;
+}
+
+.privacy-card a {
+    color: #003d99;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.privacy-card a:hover,
+.privacy-card a:focus-visible {
+    color: #0066ff;
+}
+
+.privacy-updated {
+    margin-top: 2rem !important;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(26, 26, 46, 0.12);
+    font-size: 0.9rem !important;
+    color: rgba(26, 26, 46, 0.65) !important;
+}
+
+@media (max-width: 768px) {
+    .privacy-section {
+        padding: 60px 16px 80px;
+    }
+
+    .privacy-card {
+        padding: 1.5rem;
+    }
+
+    .privacy-card h1 {
+        font-size: 1.6rem;
     }
 }
 
